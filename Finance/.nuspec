@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+    <metadata>
+        <id>CosminSanda.Finance</id>
+        <version>0.0.1</version>
+        <title>Yahoo Earnings Calendar</title>
+        <authors>Cosmin Catalin Sanda</authors>
+        <owners>cosmincatalin</owners>
+        <projectUrl>https://github.com/cosmincatalin/finance-library</projectUrl>
+        <icon>images\icon.png</icon>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Fetches the historical and future earnings dates for stock tickers from Yahoo Finance</description>
+        <releaseNotes>First Blood</releaseNotes>
+        <copyright>Copyright © 2020 Cosmin Catalin Sanda</copyright>
+        <tags>finance scraper</tags>
+        <dependencies>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="icon.png" target="images\" />
+    </files>
+</package>
