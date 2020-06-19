@@ -14,7 +14,7 @@ using ServiceStack.Text;
 namespace CosminSanda.Finance
 
 {
-    public class EarningsCalendar
+    public static class EarningsCalendar
     {
         private const string Url = "https://finance.yahoo.com/calendar/earnings?symbol=";
         private const string Bookmark = "root.App.main = ";

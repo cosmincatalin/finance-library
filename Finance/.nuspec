@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>CosminSanda.Finance</id>
-        <version>0.0.1</version>
+        <version>0.0.3</version>
         <title>Yahoo Earnings Calendar</title>
         <authors>Cosmin Catalin Sanda</authors>
         <owners>cosmincatalin</owners>
@@ -14,9 +14,13 @@
         <copyright>Copyright © 2020 Cosmin Catalin Sanda</copyright>
         <tags>finance scraper</tags>
         <dependencies>
+            <dependency id="Newtonsoft.Json" version="12.0.3" />
+            <dependency id="ServiceStack.Text" version="5.9.0" />
         </dependencies>
     </metadata>
     <files>
-        <file src="icon.png" target="images\" />
+        <file src="../icon.png" target="images\" />
+        <file src="bin\Debug\**\*.dll" target="lib" />
+        <file src="bin\Debug\**\*.pdb" target="lib" />
     </files>
 </package>
