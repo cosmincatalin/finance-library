@@ -7,8 +7,6 @@ namespace CosminSanda.Finance
     public class Candle
     {
         private float _close;
-        
-        public string Ticker { get; set; }
 
         public DateTime Date { get; set; }
 
