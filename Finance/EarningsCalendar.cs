@@ -39,8 +39,20 @@ namespace CosminSanda.Finance
                 Console.WriteLine(ex.Message);
             }
 
-            return earnings;
+            var now = DateTime.UtcNow;
+            return earnings.OrderByDescending(o => o.Date).ToList();
         }
+
+        public static async Task<List<EarningsDate>> GetPastEarnings(string ticker, int limit = int.MaxValue)
+        {
+            var now = DateTime.UtcNow;
+            var earnings = await GetEarnings(ticker);
+            return earnings
+                .Where(o => o.Date.CompareTo(now) < 0)
+                .OrderByDescending(o => o.Date)
+                .Take(limit)
+                .ToList();
+        } 
 
         private static bool InvalidateCache(IEnumerable<EarningsDate> earnings)
         {
@@ -80,7 +92,7 @@ namespace CosminSanda.Finance
                     foreach (var earningsDate in earningsJson)
                     {
                         var earning = JsonConvert.DeserializeObject<EarningsDate>(earningsDate.ToString(), dateTimeConverter);
-                        earnings.Add(earning);
+                        earnings.Add(earning?.WithTicker(ticker));
                     }
                 break;
             }

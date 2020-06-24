@@ -25,7 +25,7 @@ namespace Tests
         [Test, Order(1)]
         public async Task FetchEarningsAndCache()
         {
-            var ztoEarnings = await EarningsCalendar.GetEarnings(Ticker);
+            var ztoEarnings = await EarningsCalendar.GetPastEarnings(Ticker);
             Assert.Greater(ztoEarnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
         }
 

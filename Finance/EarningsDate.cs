@@ -5,6 +5,8 @@ namespace CosminSanda.Finance
 {
     public class EarningsDate
     {
+        public string Ticker { get; private set; }
+
         [JsonProperty("startdatetime")]
         public DateTime Date { get; set; }
         
@@ -19,7 +21,14 @@ namespace CosminSanda.Finance
 
         public override string ToString()
         {
-            return $"{Date:yyyy-MM-dd},{DateType.ToUpper()},{EpsEstimate},{EpsActual}";
+            return $"{Ticker},{Date:yyyy-MM-dd},{DateType.ToUpper()},{EpsEstimate},{EpsActual}";
         }
+
+        public EarningsDate WithTicker(string ticker)
+        {
+            Ticker = ticker;
+            return this;
+        }
+        
     }
 }

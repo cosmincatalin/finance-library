@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>CosminSanda.Finance</id>
-        <version>0.0.4</version>
+        <version>0.0.5</version>
         <title>Yahoo Earnings Calendar</title>
         <authors>Cosmin Catalin Sanda</authors>
         <owners>cosmincatalin</owners>
@@ -10,11 +10,13 @@
         <icon>images\icon.png</icon>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Fetches the historical and future earnings dates for stock tickers from Yahoo Finance</description>
-        <releaseNotes>
-            0.0.4 - Remove Ticker from Candle class.
-            0.0.3 - First Blood.
-            0.0.2 - Unusable version.
-            0.0.1 - Unusable version.
+        <releaseNotes>0.0.6 - 
+0.0.5 - Put Ticker back in Candle class and Candle class.
+      - Add method to get only previous earnings dates.
+0.0.4 - Remove Ticker from Candle class.
+0.0.3 - First Blood.
+0.0.2 - Unusable version.
+0.0.1 - Unusable version.
         </releaseNotes>
         <copyright>Copyright © 2020 Cosmin Catalin Sanda</copyright>
         <tags>finance scraper</tags>

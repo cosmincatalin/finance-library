@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
@@ -15,22 +15,22 @@ namespace CosminSanda.Finance
 
         public static async Task<List<Candle>> GetQuotes(string ticker, string startDate, string endDate)
         {
-            var start = DateTime.ParseExact($"{startDate}Z", "yyyy-MM-ddK", null).ToUniversalTime();
-            var end = DateTime.ParseExact($"{endDate}Z", "yyyy-MM-ddK", null).ToUniversalTime();
+            var start = DateTime.ParseExact($"{startDate}Z", "yyyy-MM-ddK", null).ToUniversalTime().AddHours(18);
+            var end = DateTime.ParseExact($"{endDate}Z", "yyyy-MM-ddK", null).ToUniversalTime().AddHours(18);
             var url = $"https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={start.ToUnixTime()}&period2={end.ToUnixTime()}&interval=1d&events=history";
 
             using var webConnector = new WebClient();
             await using var responseStream = await webConnector.OpenReadTaskAsync(url);
             using var responseStreamReader = new StreamReader(responseStream ?? throw new NoDataException());
             var tempStorageString = await responseStreamReader.ReadToEndAsync();
-            return tempStorageString.FromCsv<List<Candle>>();
+            return tempStorageString.FromCsv<List<Candle>>().Select(q => q.WithTicker(ticker)).ToList();
         }
 
         public static async Task<List<Candle>> GetQuotesAround(string ticker, EarningsDate earningsDate, int lookAround = 1)
         {
             lookAround = Math.Max(lookAround, 1);
-            var start = earningsDate.Date;
-            var end = earningsDate.Date.AddDays(1);
+            var start = earningsDate.Date.AddHours(-earningsDate.Date.Hour).AddMinutes(-earningsDate.Date.Minute).AddSeconds(-earningsDate.Date.Second).AddMilliseconds(-earningsDate.Date.Millisecond);
+            var end = start.AddDays(1);
             if (earningsDate.DateType != "BMO") lookAround -= 1;
             for (var i = 0; i < lookAround; i++)
             {

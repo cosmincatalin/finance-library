@@ -20,17 +20,10 @@ namespace Tests
         [Test]
         public async Task GetQuotesAround()
         {
-            var fictiveZtoEarningsDate = DateTime.UtcNow.Date.AddDays(-180);
-            while (Util.IsHoliday(fictiveZtoEarningsDate)) fictiveZtoEarningsDate = fictiveZtoEarningsDate.AddDays(1);
-            
-            var fictiveZtoEarnings = new EarningsDate()
-            {
-                Date = fictiveZtoEarningsDate,
-                DateType = "AMC"
-            };
-
-            var ztoQuotes = await Quotes.GetQuotesAround(Ticker, fictiveZtoEarnings, 9);
-            Assert.AreEqual(0, ztoQuotes.Count % 2, "The total number of quotes needs to be even.");
+            var lookAround = 6;
+            var earnings = await EarningsCalendar.GetPastEarnings(Ticker, 3);
+            var quotes = await Quotes.GetQuotesAround(Ticker, earnings[0], lookAround);
+            Assert.AreEqual(lookAround * 2, quotes.Count , "there must be exactly double the quotes days as the lookAround.");
         }
     }
 }
