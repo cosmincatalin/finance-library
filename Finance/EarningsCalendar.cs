@@ -109,6 +109,16 @@ namespace CosminSanda.Finance
             var content = await File.ReadAllTextAsync(filePath);
             return content.FromCsv<List<EarningsDate>>();
         }
-        
+
+        public static async Task<EarningsDate> GetNextEarningsDate(string ticker)
+        {
+            var now = DateTime.UtcNow;
+            var earnings = await GetEarnings(ticker);
+            return earnings
+                .Where(o => o.Date.CompareTo(now) >= 0)
+                .OrderBy(o => o.Date)
+                .First();
+        }
+
     }
 }

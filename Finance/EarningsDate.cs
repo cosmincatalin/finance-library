@@ -19,6 +19,8 @@ namespace CosminSanda.Finance
         [JsonProperty("epsactual")]
         public float? EpsActual { get; set; }
 
+        public string EarningsMarker => DateType != "BMO" ? Date.ToString("yyyy-MM-dd 12:00:00") : Date.AddDays(-1).ToString("yyyy-MM-dd 12:00:00");
+
         public override string ToString()
         {
             return $"{Ticker},{Date:yyyy-MM-dd},{DateType.ToUpper()},{EpsEstimate},{EpsActual}";

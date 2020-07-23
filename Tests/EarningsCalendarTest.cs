@@ -34,15 +34,20 @@ namespace Tests
         {
             var earnings = await EarningsCalendar.LoadCachedEarnings(Ticker);
             Assert.Greater(earnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
-            Assert.Pass();
         }
         
-        [Test]
+        [Test, Order(3)]
         public async Task LoadUnknownCachedEarnings()
         {
             var earnings = await EarningsCalendar.LoadCachedEarnings("UNKNOWN");
             Assert.AreEqual(0, earnings.Count, "There must be 0 earnings fro UNKNOWN");
-            Assert.Pass();
+        }
+        
+        [Test, Order(4)]
+        public async Task GetNextEarningsDate()
+        {
+            var date = await EarningsCalendar.GetNextEarningsDate(Ticker);
+            Assert.NotNull(date, "The date should not be null");
         }
     }
 }
