@@ -5,6 +5,7 @@ namespace CosminSanda.Finance
 {
     public class EarningsDate
     {
+        [JsonProperty("ticker")]
         public string Ticker { get; private set; }
 
         [JsonProperty("startdatetime")]
