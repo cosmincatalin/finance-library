@@ -1,0 +1,26 @@
+﻿name: Build package
+
+on:
+    push:
+        branches:
+            -   master
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: Setup .NET Core
+                uses: actions/setup-dotnet@v2
+                with:
+                    dotnet-version: 3.1.x
+            -   name: Pack
+                run: dotnet pack --configuration Release --output .
+            -   name: Get Build Version
+                run: |
+                    [xml]$Data=Get-Content .nuspec
+                    $version = $Data.package.metadata.version
+                    echo "BUILD_VERSION=$version" >> $env:GITHUB_ENV
+                shell: pwsh
+            -   name: Push
+                run: dotnet nuget push CosminSanda.Finance.$BUILD_VERSION.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

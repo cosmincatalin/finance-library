@@ -22,7 +22,7 @@ namespace CosminSanda.Finance
 
         public static async Task<List<EarningsDate>> GetEarnings(DateTime day)
         {
-            string formattedDate = await GetYahooFormattedString(day);
+            string formattedDate = day.ToString("yyyy-MM-dd");
             var earnings = await LoadCachedEarnings(formattedDate);
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
@@ -166,11 +166,6 @@ namespace CosminSanda.Finance
                 .Where(o => o.Date.CompareTo(now) >= 0)
                 .OrderBy(o => o.Date)
                 .First();
-        }
-
-        private static async Task<string> GetYahooFormattedString(DateTime date)
-        {
-            return date.ToString("yyyy-MM-dd");
         }
     }
 }
