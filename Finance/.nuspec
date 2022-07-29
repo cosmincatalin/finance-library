@@ -25,8 +25,8 @@
         <copyright>Copyright © 2020 Cosmin Catalin Sanda</copyright>
         <tags>finance scraper</tags>
         <dependencies>
-            <dependency id="Newtonsoft.Json" version="12.0.3" />
-            <dependency id="ServiceStack.Text" version="5.9.0" />
+            <dependency id="Newtonsoft.Json" version="13.0.1" />
+            <dependency id="ServiceStack.Text" version="6.2.0" />
         </dependencies>
     </metadata>
     <files>
