@@ -16,9 +16,33 @@ namespace CosminSanda.Finance
 {
     public static class EarningsCalendar
     {
-        private const string Url = "https://finance.yahoo.com/calendar/earnings?symbol=";
+        private const string Url = "https://finance.yahoo.com/calendar/earnings";
         private const string Bookmark = "root.App.main = ";
         public const string CacheSubPath = ".cache/CosminSanda/Finance/Earnings";
+
+        public static async Task<List<EarningsDate>> GetEarnings(DateTime day)
+        {
+            string formattedDate = await GetYahooFormattedString(day);
+            var earnings = await LoadCachedEarnings(formattedDate);
+
+            if (earnings.Count == 0 || InvalidateCache(earnings))
+            {
+                earnings = await RetrieveEarnings(new List<(string query, string value)>() { ("day", formattedDate) });
+            }
+
+            try
+            {
+                CacheEarnings(formattedDate, earnings);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Could not cache earnings calendar to disk.");
+                Console.WriteLine(ex.Message);
+            }
+
+            var now = DateTime.UtcNow;
+            return earnings.OrderByDescending(o => o.Date).ToList();
+        }
 
         public static async Task<List<EarningsDate>> GetEarnings(string ticker)
         {
@@ -26,7 +50,7 @@ namespace CosminSanda.Finance
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
             {
-                earnings = await RetrieveEarnings(ticker);
+                earnings = await RetrieveEarnings(new List<(string query, string value)>() {("symbol", ticker)});
             }
 
             try
@@ -70,10 +94,25 @@ namespace CosminSanda.Finance
             CsvSerializer.SerializeToWriter(earnings, csv);
         }
 
-        public static async Task<List<EarningsDate>> RetrieveEarnings(string ticker)
+        private static void CacheEarnings(string formattedStartDate, string formattedEndDate, List<EarningsDate> earnings)
+        {
+            var savePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + CacheSubPath;
+            Directory.CreateDirectory(savePath);
+            JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
+
+            using var csv = new StreamWriter(Path.Combine(savePath, $"{formattedStartDate}_{formattedEndDate}.csv"));
+            CsvSerializer.SerializeToWriter(earnings, csv);
+        }
+
+        public static async Task<List<EarningsDate>> RetrieveEarnings(List<(string query, string value)> queryValues)
         {
             using var webConnector = new WebClient();
-            await using var responseStream = await webConnector.OpenReadTaskAsync(Url + ticker);
+            string queryParameters = "";
+            foreach(var queryValue in queryValues)
+            {
+                queryParameters += $"?{queryValue.query}={queryValue.value}";
+            }
+            await using var responseStream = await webConnector.OpenReadTaskAsync(Url + queryParameters);
             using var responseStreamReader = new StreamReader(responseStream ?? throw new NoDataException());
             var tempStorageString = await responseStreamReader.ReadToEndAsync();
 
@@ -92,7 +131,16 @@ namespace CosminSanda.Finance
                     foreach (var earningsDate in earningsJson)
                     {
                         var earning = JsonConvert.DeserializeObject<EarningsDate>(earningsDate.ToString(), dateTimeConverter);
-                        earnings.Add(earning?.WithTicker(ticker));
+                        
+                        if (queryValues.Count(q => q.query == "ticker") > 0)
+                        {
+                            var tickerQuery = queryValues.FirstOrDefault(q => q.query == "ticker");
+                            earnings.Add(earning?.WithTicker(tickerQuery.value));
+                        }
+                        else
+                        {
+                            earnings.Add(earning);
+                        }
                     }
                 break;
             }
@@ -120,5 +168,9 @@ namespace CosminSanda.Finance
                 .First();
         }
 
+        private static async Task<string> GetYahooFormattedString(DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd");
+        }
     }
 }

@@ -49,5 +49,13 @@ namespace Tests
             var date = await EarningsCalendar.GetNextEarningsDate(Ticker);
             Assert.NotNull(date, "The date should not be null");
         }
+
+        [Test, Order(0)]
+        public async Task FetchEarningsAndCacheByDay()
+        {
+            DateTime day = new DateTime(2022, 7, 6);
+            var earnings = await EarningsCalendar.GetEarnings(day);
+            Assert.Greater(earnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
+        }
     }
 }
