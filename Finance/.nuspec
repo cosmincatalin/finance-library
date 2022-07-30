@@ -10,7 +10,8 @@
         <icon>images\icon.png</icon>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Fetches the historical and future earnings dates for stock tickers from Yahoo Finance</description>
-        <releaseNotes>0.0.9 - Experimental for GitHub actions
+        <releaseNotes>1.0.0 - Refactor and braking changes
+0.0.9 - Experimental for GitHub actions
 0.0.8 - Added earnings by day request (Thanks to @mccabe93)
 0.0.7 - Add a method to get the next earnings date for a ticker.
       - Add a property for an earning date that helps with displaying when exactly it happened in between trading days.
@@ -25,8 +26,11 @@
         <copyright>Copyright © 2020 Cosmin Catalin Sanda</copyright>
         <tags>finance scraper</tags>
         <dependencies>
-            <dependency id="Newtonsoft.Json" version="13.0.1" />
-            <dependency id="ServiceStack.Text" version="6.2.0" />
+            <group>
+                <dependency id="Newtonsoft.Json" version="13.0.1" />
+                <dependency id="ServiceStack.Text" version="6.2.0" />
+            </group>
+            <group targetFramework=".NETCoreApp3.1" />
         </dependencies>
     </metadata>
     <files>
