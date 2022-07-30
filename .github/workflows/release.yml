@@ -20,7 +20,7 @@ jobs:
                 run: dotnet pack --configuration Release --output .
             -   name: Get Build Version
                 run: |
-                    [xml]$Data=Get-Content .nuspec
+                    [xml]$Data=Get-Content Finance/.nuspec
                     $version = $Data.package.metadata.version
                     echo "BUILD_VERSION=$version" >> $env:GITHUB_ENV
                 shell: pwsh
