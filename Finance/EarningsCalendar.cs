@@ -8,8 +8,6 @@ using CosminSanda.Finance.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using ServiceStack;
-using ServiceStack.Text;
 
 namespace CosminSanda.Finance
 
@@ -18,12 +16,17 @@ namespace CosminSanda.Finance
     {
         private const string Url = "https://finance.yahoo.com/calendar/earnings";
         private const string Bookmark = "root.App.main = ";
-        public const string CacheSubPath = ".cache/CosminSanda/Finance/Earnings";
 
+        /// <summary>
+        /// Get a list
+        /// </summary>
+        /// <param name="day"></param>
+        /// <returns></returns>
         public static async Task<List<EarningsDate>> GetEarnings(DateTime day)
         {
-            string formattedDate = day.ToString("yyyy-MM-dd");
-            var earnings = await LoadCachedEarnings(formattedDate);
+            var formattedDate = day.ToString("yyyy-MM-dd");
+
+            var earnings = await Cache.GetCachedEarnings(formattedDate);
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
             {
@@ -32,7 +35,7 @@ namespace CosminSanda.Finance
 
             try
             {
-                CacheEarnings(formattedDate, earnings);
+                await Cache.CacheEarnings(formattedDate, earnings);
             }
             catch (Exception ex)
             {
@@ -46,7 +49,7 @@ namespace CosminSanda.Finance
 
         public static async Task<List<EarningsDate>> GetEarnings(string ticker)
         {
-            var earnings = await LoadCachedEarnings(ticker);
+            var earnings = await Cache.GetCachedEarnings(ticker);
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
             {
@@ -55,7 +58,7 @@ namespace CosminSanda.Finance
 
             try
             {
-                CacheEarnings(ticker, earnings);
+                await Cache.CacheEarnings(ticker, earnings);
             }
             catch (Exception ex)
             {
@@ -84,30 +87,10 @@ namespace CosminSanda.Finance
             return earnings.Any(earning => earning.Date < now && earning.EpsActual == null);
         }
 
-        private static void CacheEarnings(string ticker, List<EarningsDate> earnings)
-        {
-            var savePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + CacheSubPath;
-            Directory.CreateDirectory(savePath);
-            JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
-
-            using var csv = new StreamWriter(Path.Combine(savePath, $"{ticker}.csv"));
-            CsvSerializer.SerializeToWriter(earnings, csv);
-        }
-
-        private static void CacheEarnings(string formattedStartDate, string formattedEndDate, List<EarningsDate> earnings)
-        {
-            var savePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + CacheSubPath;
-            Directory.CreateDirectory(savePath);
-            JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
-
-            using var csv = new StreamWriter(Path.Combine(savePath, $"{formattedStartDate}_{formattedEndDate}.csv"));
-            CsvSerializer.SerializeToWriter(earnings, csv);
-        }
-
         public static async Task<List<EarningsDate>> RetrieveEarnings(List<(string query, string value)> queryValues)
         {
             using var webConnector = new WebClient();
-            string queryParameters = "";
+            var queryParameters = "";
             foreach(var queryValue in queryValues)
             {
                 queryParameters += $"?{queryValue.query}={queryValue.value}";
@@ -146,16 +129,6 @@ namespace CosminSanda.Finance
             }
 
             return earnings;
-        }
-
-        public static async Task<List<EarningsDate>> LoadCachedEarnings(string ticker)
-        {
-            var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + CacheSubPath;
-            var filePath = Path.Combine(folderPath, $"{ticker}.csv");
-            if (!File.Exists(filePath)) return new List<EarningsDate>();
-            using var csv = new StreamReader(filePath);
-            var content = await File.ReadAllTextAsync(filePath);
-            return content.FromCsv<List<EarningsDate>>();
         }
 
         public static async Task<EarningsDate> GetNextEarningsDate(string ticker)

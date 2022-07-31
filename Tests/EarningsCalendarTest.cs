@@ -13,8 +13,10 @@ namespace Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + EarningsCalendar.CacheSubPath;
-            var filePath = Path.Combine(folderPath, $"{Ticker}.csv");
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{Ticker.Trim().ToLower()}.csv");
+            
+            Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance"));
+            
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -32,14 +34,14 @@ namespace Tests
         [Test, Order(2)]
         public async Task LoadCachedEarnings()
         {
-            var earnings = await EarningsCalendar.LoadCachedEarnings(Ticker);
+            var earnings = await Cache.GetCachedEarnings(Ticker);
             Assert.Greater(earnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
         }
         
         [Test, Order(3)]
         public async Task LoadUnknownCachedEarnings()
         {
-            var earnings = await EarningsCalendar.LoadCachedEarnings("UNKNOWN");
+            var earnings = await Cache.GetCachedEarnings("UNKNOWN");
             Assert.AreEqual(0, earnings.Count, "There must be 0 earnings fro UNKNOWN");
         }
         
