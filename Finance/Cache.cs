@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using ServiceStack;
 using ServiceStack.Text;
@@ -15,7 +14,8 @@ namespace CosminSanda.Finance
     {
         /// <summary>
         /// Tries to use the local storage to return a list of dates when ERs took place or will
-        /// take place. Returns an empty list when nothing is found locally. 
+        /// take place. Returns an empty list when nothing is found locally. The item will be filtered
+        /// so that any duplicates are removed.
         /// </summary>
         /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
         /// <returns>A list of calendar dates</returns>
@@ -26,14 +26,16 @@ namespace CosminSanda.Finance
             if (!File.Exists(filePath)) return new List<EarningsDate>();
 
             var content = await File.ReadAllTextAsync(filePath);
-            return content.FromCsv<List<EarningsDate>>().Distinct().ToList();
+            return content.FromCsv<List<EarningsDate>>();
         }
 
         /// <summary>
         /// Saves a list of ER dates associated with a ticker to local storage as a .csv file.
+        /// If the file already exists, data will be overwritten.
+        /// TODO: Instead of overwriting, append, but make sure updates are applied for existing dates
         /// </summary>
-        /// <param name="ticker"></param>
-        /// <param name="earnings"></param>
+        /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
+        /// <param name="earnings">The list of ER dates to be persisted to local storage</param>
         public static async Task CacheEarnings(string ticker, List<EarningsDate> earnings)
         {
             var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{ticker.Trim().ToLower()}.csv");
@@ -42,9 +44,9 @@ namespace CosminSanda.Finance
 
             JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
 
-            if (File.Exists(filePath)) CsvConfig<EarningsDate>.OmitHeaders = true;;
+            if (File.Exists(filePath)) CsvConfig<EarningsDate>.OmitHeaders = true;
 
-            await using var csv = new StreamWriter(filePath, append: true);
+            await using var csv = new StreamWriter(filePath, append: false);
             CsvSerializer.SerializeToWriter(earnings, csv);
         }
     }

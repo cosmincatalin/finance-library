@@ -12,6 +12,9 @@ using Newtonsoft.Json.Linq;
 namespace CosminSanda.Finance
 
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class EarningsCalendar
     {
         private const string Url = "https://finance.yahoo.com/calendar/earnings";
@@ -42,11 +45,18 @@ namespace CosminSanda.Finance
                 Console.WriteLine("Could not cache earnings calendar to disk.");
                 Console.WriteLine(ex.Message);
             }
-
-            var now = DateTime.UtcNow;
-            return earnings.OrderByDescending(o => o.Date).ToList();
+            
+            return earnings
+                .Where(o => o.Date < DateTime.Today)
+                .OrderByDescending(o => o.Date)
+                .ToList();
         }
 
+        /// <summary>
+        /// Given a financial instrument, get the list of past ER dates available on Yahoo Finance.
+        /// </summary>
+        /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
+        /// <returns>A list of calendar dates</returns>
         public static async Task<List<EarningsDate>> GetEarnings(string ticker)
         {
             var earnings = await Cache.GetCachedEarnings(ticker);
