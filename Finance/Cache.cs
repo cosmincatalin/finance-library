@@ -19,14 +19,14 @@ namespace CosminSanda.Finance
         /// </summary>
         /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
         /// <returns>A list of calendar dates</returns>
-        public static async Task<List<EarningsDate>> GetCachedEarnings(string ticker)
+        public static async Task<List<EarningsRelease>> GetCachedEarnings(string ticker)
         {
             var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{ticker.Trim().ToLower()}.csv");
 
-            if (!File.Exists(filePath)) return new List<EarningsDate>();
+            if (!File.Exists(filePath)) return new List<EarningsRelease>();
 
             var content = await File.ReadAllTextAsync(filePath);
-            return content.FromCsv<List<EarningsDate>>();
+            return content.FromCsv<List<EarningsRelease>>();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace CosminSanda.Finance
         /// </summary>
         /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
         /// <param name="earnings">The list of ER dates to be persisted to local storage</param>
-        public static async Task CacheEarnings(string ticker, List<EarningsDate> earnings)
+        public static async Task CacheEarnings(string ticker, List<EarningsRelease> earnings)
         {
             var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{ticker.Trim().ToLower()}.csv");
             
@@ -44,7 +44,7 @@ namespace CosminSanda.Finance
 
             JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
 
-            if (File.Exists(filePath)) CsvConfig<EarningsDate>.OmitHeaders = true;
+            if (File.Exists(filePath)) CsvConfig<EarningsRelease>.OmitHeaders = true;
 
             await using var csv = new StreamWriter(filePath, append: false);
             CsvSerializer.SerializeToWriter(earnings, csv);

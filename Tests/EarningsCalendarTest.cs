@@ -56,7 +56,7 @@ namespace Tests
         public async Task FetchEarningsAndCacheByDay()
         {
             DateTime day = new DateTime(2022, 7, 6);
-            var earnings = await EarningsCalendar.GetEarnings(day);
+            var earnings = await EarningsCalendar.GetCompaniesReporting(day);
             Assert.Greater(earnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
         }
     }

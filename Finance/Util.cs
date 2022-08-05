@@ -2,13 +2,20 @@ using System;
 
 namespace CosminSanda.Finance
 {
+    /// <summary>
+    /// Various methods that have not found their place somewhere else 
+    /// </summary>
     public class Util
     {
-        // Partly from https://www.codeproject.com/Tips/1168428/US-Federal-Holidays-Csharp
+        /// <summary>
+        /// Heavily inspired from https://www.codeproject.com/Tips/1168428/US-Federal-Holidays-Csharp 
+        /// </summary>
+        /// <param name="date">The data you want to find out if it falls on a holiday or not</param>
+        /// <returns>Weather the day is a holiday or not</returns>
         public static bool IsHoliday(DateTime date) 
         {
             // to ease typing
-            var nthWeekDay    = (int)(Math.Ceiling((double)date.Day / 7.0d));
+            var nthWeekDay    = (int)(Math.Ceiling(date.Day / 7.0d));
             var dayName = date.DayOfWeek;
             var isThursday   = dayName == DayOfWeek.Thursday;
             var isFriday     = dayName == DayOfWeek.Friday;
@@ -28,7 +35,7 @@ namespace CosminSanda.Finance
             // President’s Day (3rd Monday in February)
             if (date.Month == 2 && isMonday && nthWeekDay == 3) return true;
 
-            // Good Friday!!!!!!!!!!!!!! WIP
+            // Good Friday
             if (GoodFriday(date.Year).ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")) return true;
             
             // Memorial Day (Last Monday in May)
@@ -55,16 +62,14 @@ namespace CosminSanda.Finance
         
         private static DateTime GoodFriday(int year)
         {
-            var day = 0;
-            var month = 0;
 
             var g = year % 19;
             var c = year / 100;
-            var h = (c - (int)(c / 4) - (int)((8 * c + 13) / 25) + 19 * g + 15) % 30;
-            var i = h - (int)(h / 28) * (1 - (int)(h / 28) * (int)(29 / (h + 1)) * (int)((21 - g) / 11));
+            var h = (c - c / 4 - (8 * c + 13) / 25 + 19 * g + 15) % 30;
+            var i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - g) / 11));
 
-            day   = i - ((year + (int)(year / 4) + i + 2 - c + (int)(c / 4)) % 7) + 28;
-            month = 3;
+            var day = i - ((year + year / 4 + i + 2 - c + c / 4) % 7) + 28;
+            var month = 3;
 
             if (day <= 31) return new DateTime(year, month, day);
             month++;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
+using CosminSanda.Finance.Records;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -21,11 +22,11 @@ namespace CosminSanda.Finance
         private const string Bookmark = "root.App.main = ";
 
         /// <summary>
-        /// Get a list
+        /// Get a list of companies that report earnings on a specific day.
         /// </summary>
-        /// <param name="day"></param>
-        /// <returns></returns>
-        public static async Task<List<EarningsDate>> GetEarnings(DateTime day)
+        /// <param name="day">The day for which you want to know the companies reporting earnings</param>
+        /// <returns>A list of financial instruments</returns>
+        public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
         {
             var formattedDate = day.ToString("yyyy-MM-dd");
 
@@ -48,7 +49,7 @@ namespace CosminSanda.Finance
             
             return earnings
                 .Where(o => o.Date < DateTime.Today)
-                .OrderByDescending(o => o.Date)
+                .Select(o => new FinancialInstrument{ Ticker = o.Ticker})
                 .ToList();
         }
 
@@ -57,7 +58,7 @@ namespace CosminSanda.Finance
         /// </summary>
         /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
         /// <returns>A list of calendar dates</returns>
-        public static async Task<List<EarningsDate>> GetEarnings(string ticker)
+        public static async Task<List<EarningsDate>> GetPastEarningsDates(string ticker)
         {
             var earnings = await Cache.GetCachedEarnings(ticker);
 
@@ -77,27 +78,30 @@ namespace CosminSanda.Finance
             }
 
             var now = DateTime.UtcNow;
-            return earnings.OrderByDescending(o => o.Date).ToList();
+            return earnings
+                .OrderByDescending(o => o.Date)
+                .Select(o => new EarningsDate{ Date = o.Date, DateType = o.DateType})
+                .ToList();
         }
 
-        public static async Task<List<EarningsDate>> GetPastEarnings(string ticker, int limit = int.MaxValue)
-        {
-            var now = DateTime.UtcNow;
-            var earnings = await GetEarnings(ticker);
-            return earnings
-                .Where(o => o.Date.CompareTo(now) < 0)
-                .OrderByDescending(o => o.Date)
-                .Take(limit)
-                .ToList();
-        } 
+        // public static async Task<List<EarningsRelease>> GetPastEarnings(string ticker, int limit = int.MaxValue)
+        // {
+        //     var now = DateTime.UtcNow;
+        //     var earnings = await GetPastEarningsDates(ticker);
+        //     return earnings
+        //         .Where(o => o.Date.CompareTo(now) < 0)
+        //         .OrderByDescending(o => o.Date)
+        //         .Take(limit)
+        //         .ToList();
+        // } 
 
-        private static bool InvalidateCache(IEnumerable<EarningsDate> earnings)
+        private static bool InvalidateCache(IEnumerable<EarningsRelease> earnings)
         {
             var now = DateTime.UtcNow.AddDays(-5);
             return earnings.Any(earning => earning.Date < now && earning.EpsActual == null);
         }
 
-        public static async Task<List<EarningsDate>> RetrieveEarnings(List<(string query, string value)> queryValues)
+        public static async Task<List<EarningsRelease>> RetrieveEarnings(List<(string query, string value)> queryValues)
         {
             using var webConnector = new WebClient();
             var queryParameters = "";
@@ -111,7 +115,7 @@ namespace CosminSanda.Finance
 
             var rows = tempStorageString.Split("\n");
             
-            var earnings = new List<EarningsDate>();
+            var earnings = new List<EarningsRelease>();
             foreach (var row in rows)
             {
                 if (!row.StartsWith(Bookmark)) continue;
@@ -123,7 +127,7 @@ namespace CosminSanda.Finance
                 if (earningsJson != null)
                     foreach (var earningsDate in earningsJson)
                     {
-                        var earning = JsonConvert.DeserializeObject<EarningsDate>(earningsDate.ToString(), dateTimeConverter);
+                        var earning = JsonConvert.DeserializeObject<EarningsRelease>(earningsDate.ToString(), dateTimeConverter);
                         
                         if (queryValues.Count(q => q.query == "ticker") > 0)
                         {
@@ -141,14 +145,14 @@ namespace CosminSanda.Finance
             return earnings;
         }
 
-        public static async Task<EarningsDate> GetNextEarningsDate(string ticker)
-        {
-            var now = DateTime.UtcNow;
-            var earnings = await GetEarnings(ticker);
-            return earnings
-                .Where(o => o.Date.CompareTo(now) >= 0)
-                .OrderBy(o => o.Date)
-                .First();
-        }
+        // public static async Task<EarningsRelease> GetNextEarningsDate(string ticker)
+        // {
+        //     var now = DateTime.UtcNow;
+        //     var earnings = await GetPastEarningsDates(ticker);
+        //     return earnings
+        //         .Where(o => o.Date.CompareTo(now) >= 0)
+        //         .OrderBy(o => o.Date)
+        //         .First();
+        // }
     }
 }

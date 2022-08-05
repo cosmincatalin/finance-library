@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CosminSanda.Finance
 {
-    public class EarningsDate
+    public class EarningsRelease
     {
         [JsonProperty("ticker")]
         public string Ticker { get; private set; }
@@ -27,7 +27,7 @@ namespace CosminSanda.Finance
             return $"{Ticker},{Date:yyyy-MM-dd},{DateType.ToUpper()},{EpsEstimate},{EpsActual}";
         }
 
-        public EarningsDate WithTicker(string ticker)
+        public EarningsRelease WithTicker(string ticker)
         {
             Ticker = ticker;
             return this;

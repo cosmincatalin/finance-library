@@ -26,12 +26,12 @@ namespace CosminSanda.Finance
             return tempStorageString.FromCsv<List<Candle>>().Select(q => q.WithTicker(ticker)).ToList();
         }
 
-        public static async Task<List<Candle>> GetQuotesAround(string ticker, EarningsDate earningsDate, int lookAround = 1)
+        public static async Task<List<Candle>> GetQuotesAround(string ticker, EarningsRelease earningsRelease, int lookAround = 1)
         {
             lookAround = Math.Max(lookAround, 1);
-            var start = earningsDate.Date.AddHours(-earningsDate.Date.Hour).AddMinutes(-earningsDate.Date.Minute).AddSeconds(-earningsDate.Date.Second).AddMilliseconds(-earningsDate.Date.Millisecond);
+            var start = earningsRelease.Date.AddHours(-earningsRelease.Date.Hour).AddMinutes(-earningsRelease.Date.Minute).AddSeconds(-earningsRelease.Date.Second).AddMilliseconds(-earningsRelease.Date.Millisecond);
             var end = start.AddDays(1);
-            if (earningsDate.DateType != "BMO") lookAround -= 1;
+            if (earningsRelease.DateType != "BMO") lookAround -= 1;
             for (var i = 0; i < lookAround; i++)
             {
                 start = start.AddDays(-1);
