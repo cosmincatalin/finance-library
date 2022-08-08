@@ -28,6 +28,10 @@ namespace CosminSanda.Finance
         /// <returns>A list of financial instruments</returns>
         public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
         {
+            Console.WriteLine("1.0");
+            var earnings_ = Scraper.RetrieveCompaniesReporting(day);
+            earnings_.Result.ForEach(o => Console.WriteLine(o.Ticker));
+            Console.WriteLine("2.0");
             var formattedDate = day.ToString("yyyy-MM-dd");
 
             var earnings = await Cache.GetCachedEarnings(formattedDate);
@@ -104,10 +108,10 @@ namespace CosminSanda.Finance
         public static async Task<List<EarningsRelease>> RetrieveEarnings(List<(string query, string value)> queryValues)
         {
             using var webConnector = new WebClient();
-            var queryParameters = "";
+            var queryParameters = "?";
             foreach(var queryValue in queryValues)
             {
-                queryParameters += $"?{queryValue.query}={queryValue.value}";
+                queryParameters += $"{queryValue.query}={queryValue.value}&";
             }
             await using var responseStream = await webConnector.OpenReadTaskAsync(Url + queryParameters);
             using var responseStreamReader = new StreamReader(responseStream ?? throw new NoDataException());
