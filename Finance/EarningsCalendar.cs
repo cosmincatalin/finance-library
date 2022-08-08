@@ -29,7 +29,7 @@ namespace CosminSanda.Finance
         public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
         {
             Console.WriteLine("1.0");
-            var earnings_ = Scraper.RetrieveCompaniesReporting(day);
+            var earnings_ = Scraper.RetrieveCompaniesReporting(DateOnly.FromDateTime(day));
             earnings_.Result.ForEach(o => Console.WriteLine(o.Ticker));
             Console.WriteLine("2.0");
             var formattedDate = day.ToString("yyyy-MM-dd");
@@ -84,7 +84,7 @@ namespace CosminSanda.Finance
             var now = DateTime.UtcNow;
             return earnings
                 .OrderByDescending(o => o.Date)
-                .Select(o => new EarningsDate{ Date = o.Date, DateType = o.DateType})
+                .Select(o => new EarningsDate{ Date = DateOnly.FromDateTime(o.Date), DateType = o.DateType})
                 .ToList();
         }
 

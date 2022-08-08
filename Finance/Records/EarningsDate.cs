@@ -8,7 +8,7 @@ namespace CosminSanda.Finance.Records
     /// </summary>
     public record EarningsDate
     {
-        public DateTime Date { get; init; }
+        public DateOnly Date { get; init; }
 
         public string DateType { get; init; }
         
