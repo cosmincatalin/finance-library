@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>CosminSanda.Finance</RootNamespace>
         <NuspecFile>.nuspec</NuspecFile>
         <LangVersion>9</LangVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
