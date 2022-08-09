@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -64,6 +64,32 @@ namespace CosminSanda.Finance
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
 
+/*
+ * {
+  "ticker": "MSFT",
+  "companyshortname": "Microsoft Corporation",
+  "startdatetime": "2022-07-26T16:09:00Z",
+  "startdatetimetype": "TAS",
+  "epsestimate": 2.29,
+  "epsactual": 2.23,
+  "epssurprisepct": -2.75,
+  "timeZoneShortName": "EDT",
+  "gmtOffsetMilliSeconds": -14400000,
+  "quoteType": "EQUITY"
+}
+ */
+            
+            htmlSource
+                .Split("\n")
+                .Where(o => o.StartsWith(Bookmark))
+                .Take(1)
+                .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
+                .Select(JObject.Parse)
+                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
+                .Select(o => o.ToObject(typeof(Records.EarningsRelease)))
+                .ToList()
+                .ForEach(Console.WriteLine);
+            
             return htmlSource
                 .Split("\n")
                 .Where(o => o.StartsWith(Bookmark))

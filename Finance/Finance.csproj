@@ -3,7 +3,7 @@
     <PropertyGroup>
         <RootNamespace>CosminSanda.Finance</RootNamespace>
         <NuspecFile>.nuspec</NuspecFile>
-        <LangVersion>9</LangVersion>
+        <LangVersion>10</LangVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
