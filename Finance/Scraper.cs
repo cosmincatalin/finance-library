@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Globalization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,10 +28,38 @@ namespace CosminSanda.Finance
         /// <exception cref="NoDataException"></exception>
         public static async Task<IEnumerable<FinancialInstrument>> RetrieveCompaniesReporting(DateOnly day)
         {
+            var query = $"day={day.ToString("yyyy-MM-dd")}";
+            var earnings = await RetrieveEarningsData(query);
+            return earnings
+                .Select(o => o.SelectToken("$.ticker"))
+                .Select(o => new FinancialInstrument { Ticker = o.Value<string>() });
+        }
+
+        /// <summary>
+        /// Try to retrieve from Yahoo Finance the dates when a company has reported earnings in th epast and also
+        /// the dates when it is going to report earnings in the future. It is important to note that future dates
+        /// are not set in stone and are likely to change.
+        /// </summary>
+        /// <param name="company">The financial instrument associated with the company</param>
+        /// <returns>A list of calendaristic days</returns>
+        public static async Task<IEnumerable<EarningsDate>> RetrieveEarningsDates(FinancialInstrument company)
+        {
+            var query = $"symbol={company.Ticker}";
+            var earnings = await RetrieveEarningsData(query);
+            return earnings
+                .Select(o =>
+                    new EarningsDate {
+                        Date = DateOnly.FromDateTime(DateTime.ParseExact(o.SelectToken("$.startdatetime").Value<string>(), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)),
+                        DateType = o.SelectToken("$.startdatetimetype").Value<string>()
+                    }
+                );
+        }
+
+        private static async Task<IEnumerable<JToken>> RetrieveEarningsData(string query)
+        {
             using var httpClient = new HttpClient();
-            var queryParameters = $"?day={day.ToString("yyyy-MM-dd")}";
             
-            await using var responseStream = await httpClient.GetStreamAsync(Url + queryParameters);
+            await using var responseStream = await httpClient.GetStreamAsync($"{Url}?{query}");
             
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
@@ -41,10 +70,7 @@ namespace CosminSanda.Finance
                 .Take(1)
                 .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
                 .Select(JObject.Parse)
-                .SelectMany(o =>
-                    o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*].ticker"))
-                .Select(o => new FinancialInstrument { Ticker = o.Value<string>() });
-
+                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"));
         }
     }
 }

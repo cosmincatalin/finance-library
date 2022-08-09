@@ -29,8 +29,10 @@ namespace CosminSanda.Finance
         public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
         {
             Console.WriteLine("1.0");
-            var earnings_ = Scraper.RetrieveCompaniesReporting(DateOnly.FromDateTime(day));
-            earnings_.Result.ForEach(o => Console.WriteLine(o.Ticker));
+            var earnings_ = await Scraper.RetrieveCompaniesReporting(DateOnly.FromDateTime(day));
+            var earnings__ = await Scraper.RetrieveEarningsDates(new FinancialInstrument{Ticker = "MSFT"});
+            earnings__.ToList().ForEach(Console.WriteLine);
+            // earnings_.ToList().ForEach(o => Console.WriteLine(o.Ticker));
             Console.WriteLine("2.0");
             var formattedDate = day.ToString("yyyy-MM-dd");
 

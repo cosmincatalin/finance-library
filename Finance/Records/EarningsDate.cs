@@ -7,15 +7,25 @@ namespace CosminSanda.Finance.Records
     /// based on if the call will be before or after market close.
     /// </summary>
     public record EarningsDate
-    {
+{
+        /// <summary>
+        /// The calendaristic day when the earnings release call takes place
+        /// </summary>
         public DateOnly Date { get; init; }
 
+        /// <summary>
+        /// The date type is usually either Before Market Open(BMO) or After Market Close (AMC), but for past ERs
+        /// it is set to TAS/TNS which means unspecified.
+        /// </summary>
         public string DateType { get; init; }
         
         /// <summary>
         /// This is intended to be used in UIs to understand the split between when the market was last open before
         /// ER call, and when it was first open after the ER call.
         /// </summary>
-        public string EarningsMarker => DateType.Trim().ToUpper() != "BMO" ? Date.ToString("yyyy-MM-dd 12:00:00") : Date.AddDays(-1).ToString("yyyy-MM-dd 12:00:00");
+        public string EarningsMarker =>
+            DateType.Trim().ToUpper() != "BMO" ?
+            Date.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00") :
+            Date.AddDays(-1).ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00");
     }
 }
