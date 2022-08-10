@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
 using CosminSanda.Finance.Records;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CosminSanda.Finance
 {
@@ -86,7 +89,13 @@ namespace CosminSanda.Finance
                 .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
                 .Select(JObject.Parse)
                 .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
-                .Select(o => o.ToObject(typeof(Records.EarningsRelease)))
+                .Select(o => {
+                    var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
+                    options.Converters.Add(new FinancialInstrumentConverter());
+                    options.Converters.Add(new EarningsDateConverter());
+                    options.Converters.Add(new EarningsReleaseConverter());
+                    return JsonSerializer.Deserialize<CosminSanda.Finance.Records.EarningsRelease>(o.ToString(), options);
+                })
                 .ToList()
                 .ForEach(Console.WriteLine);
             

@@ -1,0 +1,15 @@
+{
+    "name": "CosminSanda.Finance",
+    "extensions": [
+        "formulahendry.dotnet-test-explorer",
+        "formulahendry.dotnet",
+        "fudge.auto-using",
+        "ms-dotnettools.csharp",
+        "k--kato.docomment",
+        "edwinsulaiman.jetbrains-rider-dark-theme",
+        "fullstackspider.visual-nuget"
+    ],
+    "settings": {
+        "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
+    }
+}

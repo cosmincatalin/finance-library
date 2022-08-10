@@ -1,5 +1,4 @@
-﻿using CosminSanda.Finance.Json;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace CosminSanda.Finance.Records;
 
@@ -8,6 +7,8 @@ namespace CosminSanda.Finance.Records;
 /// </summary>
 public record EarningsRelease
 {
-    [JsonConverter(typeof(FinancialInstrumentJsonConverter))]
     public FinancialInstrument Ticker { get; init; }
+
+    [JsonConverterAttribute(typeof(EarningsDateConverter))]
+    public EarningsDate EarningsDate { get; init; }
 }
