@@ -8,8 +8,5 @@
         "k--kato.docomment",
         "edwinsulaiman.jetbrains-rider-dark-theme",
         "fullstackspider.visual-nuget"
-    ],
-    "settings": {
-        "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
-    }
+    ]
 }
