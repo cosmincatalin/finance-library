@@ -90,9 +90,7 @@ namespace CosminSanda.Finance
                 .Select(JObject.Parse)
                 .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
                 .Select(o => {
-                    var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-                    options.Converters.Add(new FinancialInstrumentConverter());
-                    options.Converters.Add(new EarningsDateConverter());
+                    var options = new JsonSerializerOptions();
                     options.Converters.Add(new EarningsReleaseConverter());
                     return JsonSerializer.Deserialize<CosminSanda.Finance.Records.EarningsRelease>(o.ToString(), options);
                 })

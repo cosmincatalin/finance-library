@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace CosminSanda.Finance.Records;
+﻿namespace CosminSanda.Finance.Records;
 
 /// <summary>
 /// A slightly refined versioned of the JSON schema returned by Yahoo Finance when querying Earnings Releases
@@ -9,6 +7,5 @@ public record EarningsRelease
 {
     public FinancialInstrument Ticker { get; init; }
 
-    [JsonConverterAttribute(typeof(EarningsDateConverter))]
     public EarningsDate EarningsDate { get; init; }
 }
