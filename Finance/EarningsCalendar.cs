@@ -54,8 +54,8 @@ namespace CosminSanda.Finance
             }
             
             return earnings
-                .Where(o => o.Date < DateTime.Today)
-                .Select(o => new FinancialInstrument{ Ticker = o.Ticker})
+                .Where(o => o.EarningsDate.Date < DateOnly.FromDateTime(DateTime.Today))
+                .Select(o => new FinancialInstrument{ Ticker = o.FinancialInstrument.Ticker})
                 .ToList();
         }
 

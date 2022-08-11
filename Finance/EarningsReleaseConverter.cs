@@ -21,21 +21,27 @@ public class EarningsReleaseConverter : JsonConverter<CosminSanda.Finance.Record
     {
         if (reader.TokenType != JsonTokenType.StartObject) throw new JsonException();
 
-        reader.Read();
-        
-        if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException();
+        string ticker = null;
+        string company = null;
+        DateOnly earningsDate;
+        string earningsDateType = null;
 
-        DateOnly erEarningsDateDate;
-        string erEarningsDateDateType = null;
-        
         while (reader.Read())
         {
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (reader.TokenType == JsonTokenType.EndObject)
             {
-                Console.WriteLine(erEarningsDateDate);
                 return new Records.EarningsRelease {
-                    EarningsDate = new EarningsDate {Date = erEarningsDateDate, DateType = erEarningsDateDateType}
+                    FinancialInstrument = new FinancialInstrument
+                    {
+                        Ticker  = ticker,
+                        CompanyName = company
+                    },
+                    EarningsDate = new EarningsDate
+                    {
+                        Date = earningsDate,
+                        DateType = earningsDateType
+                    }
                 };
             }
 
@@ -45,12 +51,18 @@ public class EarningsReleaseConverter : JsonConverter<CosminSanda.Finance.Record
             reader.Read();
             switch (propertyName)
             {
+                case "ticker":
+                    ticker = reader.GetString()!.Trim().ToUpper();
+                    break;
+                case "companyshortname":
+                    company = reader.GetString()!.Trim();
+                    break;
                 case "startdatetime":
                     var date = DateTime.ParseExact(reader.GetString()!, "yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
-                    erEarningsDateDate = DateOnly.FromDateTime(date);
+                    earningsDate = DateOnly.FromDateTime(date);
                     break;
                 case "startdatetimetype":
-                    erEarningsDateDateType = reader.GetString()!.Trim().ToUpper();
+                    earningsDateType = reader.GetString()!.Trim().ToUpper();
                     break;
             }
         }

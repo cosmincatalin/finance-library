@@ -5,7 +5,7 @@
 /// </summary>
 public record EarningsRelease
 {
-    public FinancialInstrument Ticker { get; init; }
+    public FinancialInstrument FinancialInstrument { get; init; }
 
     public EarningsDate EarningsDate { get; init; }
 }

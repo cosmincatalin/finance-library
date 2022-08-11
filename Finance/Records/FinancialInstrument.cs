@@ -13,7 +13,12 @@
         public string Ticker
         {
             get => _ticker;
-            set => _ticker = value.Trim().ToUpper();
+            init => _ticker = value.Trim().ToUpper();
         }
+        
+        /// <summary>
+        /// The recognizable company name associated with the financial instrument
+        /// </summary>
+        public string CompanyName { get; init; }
     }
 }

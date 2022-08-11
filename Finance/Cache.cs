@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using CosminSanda.Finance.Records;
 using ServiceStack;
 using ServiceStack.Text;
 
