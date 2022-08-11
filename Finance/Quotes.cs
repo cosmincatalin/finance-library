@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
+using CosminSanda.Finance.Records;
 using ServiceStack;
 using ServiceStack.Text;
 
