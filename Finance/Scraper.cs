@@ -4,13 +4,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
+using CosminSanda.Finance.JsonConverters;
 using CosminSanda.Finance.Records;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace CosminSanda.Finance
 {
@@ -92,7 +91,7 @@ namespace CosminSanda.Finance
                 .Select(o => {
                     var options = new JsonSerializerOptions();
                     options.Converters.Add(new EarningsReleaseConverter());
-                    return JsonSerializer.Deserialize<CosminSanda.Finance.Records.EarningsRelease>(o.ToString(), options);
+                    return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);
                 })
                 .ToList()
                 .ForEach(Console.WriteLine);

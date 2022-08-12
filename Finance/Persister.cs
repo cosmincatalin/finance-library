@@ -11,7 +11,7 @@ namespace CosminSanda.Finance
     /// <summary>
     /// Handles caching to local storage of information retrieved from remote sources
     /// </summary>
-    public static class Cache
+    public static class Persister
     {
         /// <summary>
         /// Tries to use the local storage to return a list of dates when ERs took place or will

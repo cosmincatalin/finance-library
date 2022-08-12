@@ -36,7 +36,7 @@ namespace CosminSanda.Finance
             Console.WriteLine("2.0");
             var formattedDate = day.ToString("yyyy-MM-dd");
 
-            var earnings = await Cache.GetCachedEarnings(formattedDate);
+            var earnings = await Persister.GetCachedEarnings(formattedDate);
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
             {
@@ -45,7 +45,7 @@ namespace CosminSanda.Finance
 
             try
             {
-                await Cache.CacheEarnings(formattedDate, earnings);
+                await Persister.CacheEarnings(formattedDate, earnings);
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace CosminSanda.Finance
         /// <returns>A list of calendar dates</returns>
         public static async Task<List<EarningsDate>> GetPastEarningsDates(string ticker)
         {
-            var earnings = await Cache.GetCachedEarnings(ticker);
+            var earnings = await Persister.GetCachedEarnings(ticker);
 
             if (earnings.Count == 0 || InvalidateCache(earnings))
             {
@@ -75,7 +75,7 @@ namespace CosminSanda.Finance
 
             try
             {
-                await Cache.CacheEarnings(ticker, earnings);
+                await Persister.CacheEarnings(ticker, earnings);
             }
             catch (Exception ex)
             {

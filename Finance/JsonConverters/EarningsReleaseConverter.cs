@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CosminSanda.Finance.Records;
 
-namespace CosminSanda.Finance;
+namespace CosminSanda.Finance.JsonConverters;
 
 /// <summary>
 /// A custom JSON converter that allows unmarshalling the Yahoo Finance earnings release schema to

@@ -34,14 +34,14 @@ namespace Tests
         [Test, Order(2)]
         public async Task LoadCachedEarnings()
         {
-            var earnings = await Cache.GetCachedEarnings(Ticker);
+            var earnings = await Persister.GetCachedEarnings(Ticker);
             Assert.Greater(earnings.Count, 0, $"There must be at least several earning dates for {Ticker}.");
         }
         
         [Test, Order(3)]
         public async Task LoadUnknownCachedEarnings()
         {
-            var earnings = await Cache.GetCachedEarnings("UNKNOWN");
+            var earnings = await Persister.GetCachedEarnings("UNKNOWN");
             Assert.AreEqual(0, earnings.Count, "There must be 0 earnings fro UNKNOWN");
         }
         
