@@ -8,4 +8,6 @@ public record EarningsRelease
     public FinancialInstrument FinancialInstrument { get; init; }
 
     public EarningsDate EarningsDate { get; init; }
+    
+    public IncomeStatement IncomeStatement { get; init; }
 }
