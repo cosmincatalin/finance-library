@@ -3,7 +3,7 @@ namespace CosminSanda.Finance.Records;
 /**
  * Financial information released during an earnings release calls 
  */
-public class IncomeStatement
+public record IncomeStatement
 {
     
     /// <summary>

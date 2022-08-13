@@ -37,7 +37,7 @@ public class EarningsReleaseConverter : JsonConverter<EarningsRelease>
                 return new EarningsRelease {
                     FinancialInstrument = new FinancialInstrument { Ticker  = ticker, CompanyName = company },
                     EarningsDate = new EarningsDate { Date = earningsDate, DateType = earningsDateType },
-                    IncomeStatement = new IncomeStatement{ EpsEstimate = epsEstimate }
+                    IncomeStatement = new IncomeStatement{ EpsEstimate = epsEstimate, EpsActual = epsActual, EpsSurprise = epsSurprise}
                 };
             }
 
@@ -61,7 +61,13 @@ public class EarningsReleaseConverter : JsonConverter<EarningsRelease>
                     earningsDateType = reader.GetString()!.Trim().ToUpper();
                     break;
                 case "epsestimate":
-                    epsEstimate = reader.ValueTextEquals("Null") ? 0.0 : 1.1;
+                    epsEstimate = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
+                    break;
+                case "epsactual":
+                    epsActual = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
+                    break;
+                case "epssurprisepct":
+                    epsSurprise = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                     break;
             }
         }
