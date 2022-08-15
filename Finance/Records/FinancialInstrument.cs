@@ -5,7 +5,7 @@
 /// </summary>
 public record FinancialInstrument
 {
-    private string _ticker;
+    private readonly string _ticker;
 
     /// <summary>
     /// The symbol of the company as can be found in Yahoo Finance

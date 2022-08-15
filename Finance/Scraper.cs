@@ -34,7 +34,7 @@ namespace CosminSanda.Finance
             var earnings = await RetrieveEarningsData(query);
             return earnings
                 .Select(o => o.SelectToken("$.ticker"))
-                .Select(o => new FinancialInstrument { Ticker = o.Value<string>() });
+                .Select(o => new FinancialInstrument { Ticker = o!.Value<string>() });
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace CosminSanda.Finance
             return earnings
                 .Select(o =>
                     new EarningsDate {
-                        Date = DateOnly.FromDateTime(DateTime.ParseExact(o.SelectToken("$.startdatetime").Value<string>(), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)),
-                        DateType = o.SelectToken("$.startdatetimetype").Value<string>()
+                        Date = DateOnly.FromDateTime(DateTime.ParseExact(o.SelectToken("$.startdatetime")!.Value<string>()!, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)),
+                        DateType = o.SelectToken("$.startdatetimetype")!.Value<string>()
                     }
                 );
         }
@@ -66,21 +66,6 @@ namespace CosminSanda.Finance
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
 
-/*
- * {
-  "ticker": "MSFT",
-  "companyshortname": "Microsoft Corporation",
-  "startdatetime": "2022-07-26T16:09:00Z",
-  "startdatetimetype": "TAS",
-  "epsestimate": 2.29,
-  "epsactual": 2.23,
-  "epssurprisepct": -2.75,
-  "timeZoneShortName": "EDT",
-  "gmtOffsetMilliSeconds": -14400000,
-  "quoteType": "EQUITY"
-}
- */
-            
             htmlSource
                 .Split("\n")
                 .Where(o => o.StartsWith(Bookmark))
