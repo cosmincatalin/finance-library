@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using CosminSanda.Finance.Persistence;
 using CosminSanda.Finance.Records;
+using Microsoft.Data.Sqlite;
 using ServiceStack;
 using ServiceStack.Text;
 
@@ -31,24 +34,18 @@ namespace CosminSanda.Finance
         }
 
         /// <summary>
-        /// Saves a list of ER dates associated with a ticker to local storage as a .csv file.
-        /// If the file already exists, data will be overwritten.
-        /// TODO: Instead of overwriting, append, but make sure updates are applied for existing dates
+        /// Saves a list of Earnings Releases to local storage as a SQLite table.
+        /// If the database and table already exist, records will be added and updated so that the past does not have gaps
+        /// as much as possible
         /// </summary>
-        /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
-        /// <param name="earnings">The list of ER dates to be persisted to local storage</param>
-        public static async Task CacheEarnings(string ticker, List<EarningsRelease> earnings)
+        /// <param name="earnings">The list of ER objects to be persisted to local storage</param>
+        public static async Task CacheEarnings(IEnumerable<EarningsRelease> earnings)
         {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{ticker.Trim().ToLower()}.csv");
-            
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
             Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance"));
 
-            JsConfig<DateTime>.SerializeFn = date => date.ToString("yyyy-MM-dd");
-
-            if (File.Exists(filePath)) CsvConfig<EarningsRelease>.OmitHeaders = true;
-
-            await using var csv = new StreamWriter(filePath, append: false);
-            CsvSerializer.SerializeToWriter(earnings, csv);
+            await using var connection = new SqliteConnection($"Data Source={filePath}");
+            connection.Open();
         }
     }
 }

@@ -66,7 +66,7 @@ namespace CosminSanda.Finance
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
 
-            htmlSource
+            var ers = htmlSource
                 .Split("\n")
                 .Where(o => o.StartsWith(Bookmark))
                 .Take(1)
@@ -78,8 +78,9 @@ namespace CosminSanda.Finance
                     options.Converters.Add(new EarningsReleaseConverter());
                     return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);
                 })
-                .ToList()
-                .ForEach(Console.WriteLine);
+                .ToList();
+
+            await Persister.CacheEarnings(ers);
             
             return htmlSource
                 .Split("\n")
