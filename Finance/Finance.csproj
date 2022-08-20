@@ -14,8 +14,4 @@
       <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Persistence" />
-    </ItemGroup>
-
 </Project>
