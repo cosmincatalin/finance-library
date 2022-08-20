@@ -4,10 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Exceptions;
-using CosminSanda.Finance.JsonConverters;
 using CosminSanda.Finance.Records;
 using Newtonsoft.Json.Linq;
 
@@ -38,7 +36,7 @@ namespace CosminSanda.Finance
         }
 
         /// <summary>
-        /// Try to retrieve from Yahoo Finance the dates when a company has reported earnings in th epast and also
+        /// Try to retrieve from Yahoo Finance the dates when a company has reported earnings in the past and also
         /// the dates when it is going to report earnings in the future. It is important to note that future dates
         /// are not set in stone and are likely to change.
         /// </summary>
@@ -66,22 +64,6 @@ namespace CosminSanda.Finance
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
 
-            var ers = htmlSource
-                .Split("\n")
-                .Where(o => o.StartsWith(Bookmark))
-                .Take(1)
-                .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
-                .Select(JObject.Parse)
-                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
-                .Select(o => {
-                    var options = new JsonSerializerOptions();
-                    options.Converters.Add(new EarningsReleaseConverter());
-                    return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);
-                })
-                .ToList();
-
-            await Persister.CacheEarnings(ers);
-            
             return htmlSource
                 .Split("\n")
                 .Where(o => o.StartsWith(Bookmark))
