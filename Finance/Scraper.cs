@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using CosminSanda.Finance.Exceptions;
+using CosminSanda.Finance.JsonConverters;
 using CosminSanda.Finance.Records;
 using Newtonsoft.Json.Linq;
 
 namespace CosminSanda.Finance
 {
     /// <summary>
-    /// A class used specifically for retrieving data from Yahoo Finance
+    /// A class used specifically for retrieving data from Yahoo Finance. This is a scraper utility and will not use a cache.
     /// </summary>
     public static class Scraper
     {
@@ -21,41 +21,33 @@ namespace CosminSanda.Finance
         private const string Bookmark = "root.App.main = ";
         
         /// <summary>
-        /// Try to retrieve from Yahoo Finance the companies reporting on a given day.
+        /// Try to retrieve from Yahoo Finance the earnings releases on a given day.
+        ///
+        /// This method will not use any cache and will try to reach the Yahoo Finance service
         /// </summary>
-        /// <param name="day">The day for when you want to know the companies reporting.</param>
-        /// <returns>A list of financial instruments</returns>
-        /// <exception cref="NoDataException"></exception>
-        public static async Task<IEnumerable<FinancialInstrument>> RetrieveCompaniesReporting(DateOnly day)
+        /// <param name="day">The day for when you want to know the scheduled earning calls.</param>
+        /// <returns>A list of generic earning releases objects</returns>
+        public static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsReleases(DateOnly day)
         {
             var query = $"day={day.ToString("yyyy-MM-dd")}";
-            var earnings = await RetrieveEarningsData(query);
-            return earnings
-                .Select(o => o.SelectToken("$.ticker"))
-                .Select(o => new FinancialInstrument { Ticker = o!.Value<string>() });
+            return await RetrieveEarningsData(query);
         }
-
+        
         /// <summary>
-        /// Try to retrieve from Yahoo Finance the dates when a company has reported earnings in the past and also
-        /// the dates when it is going to report earnings in the future. It is important to note that future dates
-        /// are not set in stone and are likely to change.
+        /// Try to retrieve from Yahoo Finance the earnings calls a company has reported in the past and also
+        /// in the future. It is important to note that future dates are not set in stone and are likely to change.
+        ///
+        /// This method will not use any cache and will try to reach the Yahoo Finance service
         /// </summary>
         /// <param name="company">The financial instrument associated with the company</param>
-        /// <returns>A list of calendaristic days</returns>
-        public static async Task<IEnumerable<EarningsDate>> RetrieveEarningsDates(FinancialInstrument company)
+        /// <returns>A list of generic earning releases objects</returns>
+        public static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsReleases(FinancialInstrument company)
         {
             var query = $"symbol={company.Ticker}";
-            var earnings = await RetrieveEarningsData(query);
-            return earnings
-                .Select(o =>
-                    new EarningsDate {
-                        Date = DateOnly.FromDateTime(DateTime.ParseExact(o.SelectToken("$.startdatetime")!.Value<string>()!, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)),
-                        DateType = o.SelectToken("$.startdatetimetype")!.Value<string>()
-                    }
-                );
+            return await RetrieveEarningsData(query);
         }
 
-        private static async Task<IEnumerable<JToken>> RetrieveEarningsData(string query)
+        private static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsData(string query)
         {
             using var httpClient = new HttpClient();
             
@@ -70,7 +62,12 @@ namespace CosminSanda.Finance
                 .Take(1)
                 .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
                 .Select(JObject.Parse)
-                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"));
+                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
+                .Select(o => {
+                    var options = new JsonSerializerOptions();
+                    options.Converters.Add(new EarningsReleaseConverter());
+                    return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);
+                });
         }
     }
 }

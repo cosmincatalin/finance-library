@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Records;
@@ -42,23 +43,96 @@ public static class Persister
     public static async Task CacheEarnings(IEnumerable<EarningsRelease> earnings)
     {
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
-        Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance"));
-
-        await using var connection = new SqliteConnection($"Data Source={filePath}");
+        await using var connection = new SqliteConnection($"Filename={filePath}");
+        CreateSchema(connection);
         connection.Open();
+
+        await using var transaction = connection.BeginTransaction();
+        
+        var clean = connection.CreateCommand();
+        clean.CommandText = "DELETE FROM earnings_releases WHERE DATE() >= `date` AND ticker = $ticker";
+        
+        var parameter = clean.CreateParameter();
+        parameter.ParameterName = "$ticker";
+        clean.Parameters.Add(parameter);
+
+        var earningsReleases = earnings.ToList();
+
+        earningsReleases
+            .Select(earningsRelease => earningsRelease.FinancialInstrument.Ticker)
+            .Distinct()
+            .ToList()
+            .ForEach(ticker =>
+            {
+                parameter.Value = ticker;
+                clean.ExecuteNonQuery();
+            });
+        
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO earnings_releases 
+            VALUES ($ticker, $company_name, $date, $date_type, $eps_actual, $eps_estimate, $eps_surprise)
+            ON CONFLICT(ticker, `date`) DO
+            UPDATE SET company_name=excluded.company_name, date_type=excluded.date_type, eps_actual=excluded.eps_actual,
+                eps_estimate=excluded.eps_estimate, eps_surprise=excluded.eps_surprise;
+        ";
+        
+        var tickerParameter = command.CreateParameter();
+        tickerParameter.ParameterName = "$ticker";
+        command.Parameters.Add(tickerParameter);
+        
+        var companyNameParameter = command.CreateParameter();
+        companyNameParameter.ParameterName = "$company_name";
+        command.Parameters.Add(companyNameParameter);
+        
+        var dateParameter = command.CreateParameter();
+        dateParameter.ParameterName = "$date";
+        command.Parameters.Add(dateParameter);
+        
+        var dateTypeParameter = command.CreateParameter();
+        dateTypeParameter.ParameterName = "$date_type";
+        command.Parameters.Add(dateTypeParameter);
+        
+        var epsActualParameter = command.CreateParameter();
+        epsActualParameter.ParameterName = "$eps_actual";
+        command.Parameters.Add(epsActualParameter);
+
+        var epsEstimateParameter = command.CreateParameter();
+        epsEstimateParameter.ParameterName = "$eps_estimate";
+        command.Parameters.Add(epsEstimateParameter);
+        
+        var epsSurpriseParameter = command.CreateParameter();
+        epsSurpriseParameter.ParameterName = "$eps_surprise";
+        command.Parameters.Add(epsSurpriseParameter);
+        
+        earningsReleases
+            .ToList()
+            .ForEach(earningsRelease =>
+            {
+                tickerParameter.Value = earningsRelease.FinancialInstrument.Ticker;
+                companyNameParameter.Value = earningsRelease.FinancialInstrument.CompanyName;
+                dateParameter.Value = earningsRelease.EarningsDate.Date.ToString("yyyy-MM-dd");
+                dateTypeParameter.Value = earningsRelease.EarningsDate.DateType;
+                epsActualParameter.Value = (object)earningsRelease.IncomeStatement.EpsActual ?? DBNull.Value;
+                epsEstimateParameter.Value = (object)earningsRelease.IncomeStatement.EpsEstimate ?? DBNull.Value;
+                epsSurpriseParameter.Value = (object)earningsRelease.IncomeStatement.EpsSurprise ?? DBNull.Value;
+                
+                command.ExecuteNonQuery();
+            });
+
+        transaction.Commit();
     }
 
     /// <summary>
     /// Creates the database and associated schema if not already present
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public static void CreateSchema()
+    private static void CreateSchema(SqliteConnection connection)
     {
         if (_schemaReady) return;
         
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
         Console.WriteLine(filePath);
-        using var connection = new SqliteConnection($"Filename={filePath}");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -79,6 +153,7 @@ public static class Persister
         ";
 
         command.ExecuteNonQuery();
+        connection.Close();
         _schemaReady = true;
     }
 }
