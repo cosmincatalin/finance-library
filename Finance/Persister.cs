@@ -132,7 +132,7 @@ public static class Persister
         if (_schemaReady) return;
         
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
-        Console.WriteLine(filePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         connection.Open();
 
         var command = connection.CreateCommand();
