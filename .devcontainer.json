@@ -7,6 +7,7 @@
         "ms-dotnettools.csharp",
         "k--kato.docomment",
         "edwinsulaiman.jetbrains-rider-dark-theme",
-        "fullstackspider.visual-nuget"
+        "alexcvzz.vscode-sqlite",
+        "editorconfig.editorconfig"
     ]
 }

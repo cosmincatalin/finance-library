@@ -16,22 +16,35 @@ namespace CosminSanda.Finance;
 public static class Persister
 {
     private static bool _schemaReady;
-    
+
     /// <summary>
-    /// Tries to use the local storage to return a list of dates when ERs took place or will
-    /// take place. Returns an empty list when nothing is found locally. The item will be filtered
-    /// so that any duplicates are removed.
+    /// Attempts to get from the local SQLite cache all the earnings releases for a company
     /// </summary>
-    /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
-    /// <returns>A list of calendar dates</returns>
-    public static async Task<List<EarningsRelease>> GetCachedEarnings(string ticker)
+    /// <param name="financialInstrument">The financial instruments correspnding to the company.</param>
+    /// <returns>A list earnings releases</returns>
+    public static System.Collections.Generic.IEnumerable<EarningsRelease> GetCachedEarnings(FinancialInstrument financialInstrument)
     {
-        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", $"{ticker.Trim().ToLower()}.csv");
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
+        using var connection = new SqliteConnection($"Filename={filePath}");
+        CreateSchema(connection);
+        connection.Open();
 
-        if (!File.Exists(filePath)) return new List<EarningsRelease>();
+        var query = connection.CreateCommand();
+        query.CommandText = "SELECT ticker, company_name, date, date_type, eps_actual, eps_estimate, eps_surprise FROM earnings_releases WHERE ticker = $ticker";
+        query.Parameters.AddWithValue("$ticker", financialInstrument.Ticker);
 
-        var content = await File.ReadAllTextAsync(filePath);
-        return content.FromCsv<List<EarningsRelease>>();
+
+        using var reader = query.ExecuteReader();
+        while (reader.Read())
+        {
+            yield return new EarningsRelease{
+                FinancialInstrument = new FinancialInstrument {
+                    Ticker = reader.GetString(0),
+                    CompanyName = reader.GetString(1)
+                }
+            };
+        }
+
     }
 
     /// <summary>
@@ -40,18 +53,18 @@ public static class Persister
     /// as much as possible
     /// </summary>
     /// <param name="earnings">The list of ER objects to be persisted to local storage</param>
-    public static async Task CacheEarnings(IEnumerable<EarningsRelease> earnings)
+    public static void CacheEarnings(IEnumerable<EarningsRelease> earnings)
     {
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
-        await using var connection = new SqliteConnection($"Filename={filePath}");
+        using var connection = new SqliteConnection($"Filename={filePath}");
         CreateSchema(connection);
         connection.Open();
 
-        await using var transaction = connection.BeginTransaction();
-        
+        using var transaction = connection.BeginTransaction();
+
         var clean = connection.CreateCommand();
         clean.CommandText = "DELETE FROM earnings_releases WHERE DATE() >= `date` AND ticker = $ticker";
-        
+
         var parameter = clean.CreateParameter();
         parameter.ParameterName = "$ticker";
         clean.Parameters.Add(parameter);
@@ -67,32 +80,32 @@ public static class Persister
                 parameter.Value = ticker;
                 clean.ExecuteNonQuery();
             });
-        
+
         var command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO earnings_releases 
+            INSERT INTO earnings_releases
             VALUES ($ticker, $company_name, $date, $date_type, $eps_actual, $eps_estimate, $eps_surprise)
             ON CONFLICT(ticker, `date`) DO
             UPDATE SET company_name=excluded.company_name, date_type=excluded.date_type, eps_actual=excluded.eps_actual,
                 eps_estimate=excluded.eps_estimate, eps_surprise=excluded.eps_surprise;
         ";
-        
+
         var tickerParameter = command.CreateParameter();
         tickerParameter.ParameterName = "$ticker";
         command.Parameters.Add(tickerParameter);
-        
+
         var companyNameParameter = command.CreateParameter();
         companyNameParameter.ParameterName = "$company_name";
         command.Parameters.Add(companyNameParameter);
-        
+
         var dateParameter = command.CreateParameter();
         dateParameter.ParameterName = "$date";
         command.Parameters.Add(dateParameter);
-        
+
         var dateTypeParameter = command.CreateParameter();
         dateTypeParameter.ParameterName = "$date_type";
         command.Parameters.Add(dateTypeParameter);
-        
+
         var epsActualParameter = command.CreateParameter();
         epsActualParameter.ParameterName = "$eps_actual";
         command.Parameters.Add(epsActualParameter);
@@ -100,11 +113,13 @@ public static class Persister
         var epsEstimateParameter = command.CreateParameter();
         epsEstimateParameter.ParameterName = "$eps_estimate";
         command.Parameters.Add(epsEstimateParameter);
-        
+
         var epsSurpriseParameter = command.CreateParameter();
         epsSurpriseParameter.ParameterName = "$eps_surprise";
         command.Parameters.Add(epsSurpriseParameter);
-        
+
+        command.Prepare();
+
         earningsReleases
             .ToList()
             .ForEach(earningsRelease =>
@@ -116,7 +131,7 @@ public static class Persister
                 epsActualParameter.Value = (object)earningsRelease.IncomeStatement.EpsActual ?? DBNull.Value;
                 epsEstimateParameter.Value = (object)earningsRelease.IncomeStatement.EpsEstimate ?? DBNull.Value;
                 epsSurpriseParameter.Value = (object)earningsRelease.IncomeStatement.EpsSurprise ?? DBNull.Value;
-                
+
                 command.ExecuteNonQuery();
             });
 
@@ -130,7 +145,7 @@ public static class Persister
     private static void CreateSchema(SqliteConnection connection)
     {
         if (_schemaReady) return;
-        
+
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CosminSanda", "Finance", "cache.sqlite");
         Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         connection.Open();

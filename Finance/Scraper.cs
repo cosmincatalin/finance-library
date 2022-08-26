@@ -16,10 +16,10 @@ namespace CosminSanda.Finance
     /// </summary>
     public static class Scraper
     {
-        
+
         private const string Url = "https://finance.yahoo.com/calendar/earnings";
         private const string Bookmark = "root.App.main = ";
-        
+
         /// <summary>
         /// Try to retrieve from Yahoo Finance the earnings releases on a given day.
         ///
@@ -32,7 +32,7 @@ namespace CosminSanda.Finance
             var query = $"day={day.ToString("yyyy-MM-dd")}";
             return await RetrieveEarningsData(query);
         }
-        
+
         /// <summary>
         /// Try to retrieve from Yahoo Finance the earnings calls a company has reported in the past and also
         /// in the future. It is important to note that future dates are not set in stone and are likely to change.
@@ -50,24 +50,35 @@ namespace CosminSanda.Finance
         private static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsData(string query)
         {
             using var httpClient = new HttpClient();
-            
-            await using var responseStream = await httpClient.GetStreamAsync($"{Url}?{query}");
-            
+
+            var offset = 0;
+            var size = 100;
+
+            await using var responseStream = await httpClient.GetStreamAsync($"{Url}?{query}&offset={offset}&size={size}");
+
             using var responseStreamReader = new StreamReader(responseStream);
             var htmlSource = await responseStreamReader.ReadToEndAsync();
 
-            return htmlSource
+            var appData = htmlSource
                 .Split("\n")
                 .Where(o => o.StartsWith(Bookmark))
                 .Take(1)
                 .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
-                .Select(JObject.Parse)
+                .Select(JObject.Parse);
+
+            var total = appData
+                .Select(o => o.SelectToken("$.context.dispatcher.stores.ScreenerResultsStore.results.total").Value<int>())
+                .Take(1);
+
+            var earningsReleases = appData
                 .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
                 .Select(o => {
                     var options = new JsonSerializerOptions();
                     options.Converters.Add(new EarningsReleaseConverter());
                     return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);
                 });
+
+            return earningsReleases;
         }
     }
 }

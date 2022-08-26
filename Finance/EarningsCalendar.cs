@@ -28,6 +28,9 @@ public static class EarningsCalendar
     /// <returns>A list of calendar dates</returns>
     public static async Task<List<EarningsDate>> GetPastEarningsDates(string ticker)
     {
+        var financialInstrument = new FinancialInstrument{ Ticker = ticker};
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
         throw new NotImplementedException();
     }
 
@@ -41,7 +44,7 @@ public static class EarningsCalendar
     //         .Take(limit)
     //         .ToList();
     // }
-    
+
     /// <summary>
     /// A method to get the next estimated(or set) earnings release call.
     /// </summary>
@@ -58,5 +61,5 @@ public static class EarningsCalendar
     //     var now = DateTime.UtcNow.AddDays(-5);
     //     return earnings.Any(earning => earning.Date < now && earning.EpsActual == null);
     // }
-    
+
 }

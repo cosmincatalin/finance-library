@@ -8,13 +8,17 @@ namespace Tests;
 
 public class ScraperTest
 {
- 
+
     [Test]
     public async Task Runner()
     {
 
-        var results = await Scraper.RetrieveEarningsReleases(new FinancialInstrument{ Ticker = "MSFT"});
-        await Persister.CacheEarnings(results);
+        var results = await Scraper.RetrieveEarningsReleases(new FinancialInstrument{ Ticker = "AMRS"});
+        Persister.CacheEarnings(results);
+        foreach (var er in Persister.GetCachedEarnings(new FinancialInstrument{ Ticker = "AMRS"}))
+        {
+            Console.Write("{0} ", er);
+        }
     }
-    
+
 }
