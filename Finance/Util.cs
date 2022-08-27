@@ -3,16 +3,16 @@ using System;
 namespace CosminSanda.Finance
 {
     /// <summary>
-    /// Various methods that have not found their place somewhere else 
+    /// Various methods that have not found their place somewhere else
     /// </summary>
     public class Util
     {
         /// <summary>
-        /// Heavily inspired from https://www.codeproject.com/Tips/1168428/US-Federal-Holidays-Csharp 
+        /// Heavily inspired from https://www.codeproject.com/Tips/1168428/US-Federal-Holidays-Csharp
         /// </summary>
         /// <param name="date">The data you want to find out if it falls on a holiday or not</param>
         /// <returns>Weather the day is a holiday or not</returns>
-        public static bool IsHoliday(DateTime date) 
+        public static bool IsHoliday(DateTime date)
         {
             // to ease typing
             var nthWeekDay    = (int)(Math.Ceiling(date.Day / 7.0d));
@@ -20,8 +20,8 @@ namespace CosminSanda.Finance
             var isThursday   = dayName == DayOfWeek.Thursday;
             var isFriday     = dayName == DayOfWeek.Friday;
             var isMonday     = dayName == DayOfWeek.Monday;
-            var isWeekend    = dayName == DayOfWeek.Saturday || dayName == DayOfWeek.Sunday;
-            
+            var isWeekend    = dayName is DayOfWeek.Saturday or DayOfWeek.Sunday;
+
             if (isWeekend) return true;
 
             // New Years Day (Jan 1, or preceding Friday/following Monday if weekend)
@@ -37,7 +37,7 @@ namespace CosminSanda.Finance
 
             // Good Friday
             if (GoodFriday(date.Year).ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")) return true;
-            
+
             // Memorial Day (Last Monday in May)
             if (date.Month == 5 && isMonday && date.AddDays(7).Month == 6) return true;
 
@@ -59,7 +59,7 @@ namespace CosminSanda.Finance
 
             return false;
         }
-        
+
         private static DateTime GoodFriday(int year)
         {
 

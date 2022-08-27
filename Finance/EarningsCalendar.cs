@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Records;
 
@@ -31,7 +32,12 @@ public static class EarningsCalendar
         var financialInstrument = new FinancialInstrument{ Ticker = ticker};
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        throw new NotImplementedException();
+        var earnings = await Scraper.RetrieveEarningsReleases(financialInstrument);
+        return earnings
+            .Where(o => o.EarningsDate.Date < DateOnly.FromDateTime(DateTime.Now))
+            .Select(o => o.EarningsDate)
+            .OrderBy(o => o.Date)
+            .ToList();
     }
 
     // public static async Task<List<EarningsRelease>> GetPastEarnings(string ticker, int limit = int.MaxValue)
