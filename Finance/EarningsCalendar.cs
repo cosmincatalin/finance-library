@@ -19,7 +19,12 @@ public static class EarningsCalendar
     /// <returns>A list of financial instruments</returns>
     public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
     {
-        throw new NotImplementedException();
+        var date = DateOnly.FromDateTime(day);
+
+        var earnings = await Scraper.RetrieveEarningsReleases(date);
+        return earnings
+            .Select(o => o.FinancialInstrument)
+            .ToList();
     }
 
     /// <summary>
