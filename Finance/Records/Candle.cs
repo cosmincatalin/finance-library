@@ -39,7 +39,7 @@ public record Candle
     public double Close { get; init; }
 
     /// <summary>
-    /// The string representation of the object 
+    /// The string representation of the object
     /// </summary>
     /// <returns></returns>
     public override string ToString()
