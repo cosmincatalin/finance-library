@@ -45,32 +45,25 @@ public static class EarningsCalendar
             .ToList();
     }
 
-    // public static async Task<List<EarningsRelease>> GetPastEarnings(string ticker, int limit = int.MaxValue)
-    // {
-    //     var now = DateTime.UtcNow;
-    //     var earnings = await GetPastEarningsDates(ticker);
-    //     return earnings
-    //         .Where(o => o.Date.CompareTo(now) < 0)
-    //         .OrderByDescending(o => o.Date)
-    //         .Take(limit)
-    //         .ToList();
-    // }
-
     /// <summary>
     /// A method to get the next estimated(or set) earnings release call.
     /// </summary>
     /// <param name="ticker"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static async Task<EarningsRelease> GetNextEarningsDate(string ticker)
+    public static async Task<EarningsDate> GetNextEarningsDate(string ticker)
     {
-        throw new NotImplementedException();
-    }
+        var financialInstrument = new FinancialInstrument{ Ticker = ticker};
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-    // private static bool InvalidateCache(IEnumerable<EarningsRelease> earnings)
-    // {
-    //     var now = DateTime.UtcNow.AddDays(-5);
-    //     return earnings.Any(earning => earning.Date < now && earning.EpsActual == null);
-    // }
+        var earnings = await Scraper.RetrieveEarningsReleases(financialInstrument);
+        return earnings
+            .Where(o => o.EarningsDate.Date >= DateOnly.FromDateTime(DateTime.Now))
+            .Select(o => o.EarningsDate)
+            .OrderBy(o => o.Date)
+            .Take(1)
+            .ToList()
+            .First();
+    }
 
 }
