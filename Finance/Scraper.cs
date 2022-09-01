@@ -16,7 +16,6 @@ namespace CosminSanda.Finance;
 /// </summary>
 internal static class Scraper
 {
-
     private const string Url = "https://finance.yahoo.com/calendar/earnings";
     private const string Bookmark = "root.App.main = ";
 
@@ -41,7 +40,9 @@ internal static class Scraper
     /// </summary>
     /// <param name="company">The financial instrument associated with the company</param>
     /// <returns>A list of generic earning releases objects</returns>
-    public static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsReleases(FinancialInstrument company)
+    public static async Task<IEnumerable<EarningsRelease>> RetrieveEarningsReleases(
+        FinancialInstrument company
+    )
     {
         var query = $"symbol={company.Ticker}";
         return await RetrieveEarningsData(query);
@@ -56,7 +57,9 @@ internal static class Scraper
     {
         using var httpClient = new HttpClient();
 
-        await using var responseStream = await httpClient.GetStreamAsync($"{Url}?{query}&offset=0&size=1");
+        await using var responseStream = await httpClient.GetStreamAsync(
+            $"{Url}?{query}&offset=0&size=1"
+        );
 
         using var responseStreamReader = new StreamReader(responseStream);
         var htmlSource = await responseStreamReader.ReadToEndAsync();
@@ -67,9 +70,12 @@ internal static class Scraper
             .Take(1)
             .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
             .Select(JObject.Parse)
-            .Select(o => o.SelectToken("$.context.dispatcher.stores.ScreenerResultsStore.results.total")!.Value<int>())
+            .Select(
+                o =>
+                    o.SelectToken("$.context.dispatcher.stores.ScreenerResultsStore.results.total")!
+                        .Value<int>()
+            )
             .First();
-
     }
 
     /// <summary>
@@ -91,7 +97,9 @@ internal static class Scraper
         while (offset + size < total)
         {
             offset += size;
-            await using var responseStream = await httpClient.GetStreamAsync($"{Url}?{query}&offset={offset}&size={size}");
+            await using var responseStream = await httpClient.GetStreamAsync(
+                $"{Url}?{query}&offset={offset}&size={size}"
+            );
             using var responseStreamReader = new StreamReader(responseStream);
 
             var htmlSource = await responseStreamReader.ReadToEndAsync();
@@ -102,8 +110,14 @@ internal static class Scraper
                 .Take(1)
                 .Select(o => o.Substring(Bookmark.Length, o.Length - 1 - Bookmark.Length))
                 .Select(JObject.Parse)
-                .SelectMany(o => o.SelectTokens("$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"))
-                .Select(o => {
+                .SelectMany(
+                    o =>
+                        o.SelectTokens(
+                            "$.context.dispatcher.stores.ScreenerResultsStore.results.rows[*]"
+                        )
+                )
+                .Select(o =>
+                {
                     var options = new JsonSerializerOptions();
                     options.Converters.Add(new EarningsReleaseConverter());
                     return JsonSerializer.Deserialize<EarningsRelease>(o.ToString(), options);

@@ -14,7 +14,7 @@ public record EarningsRelease
     /// The earnings call schedule
     /// </summary>
     public EarningsDate EarningsDate { get; init; }
-    
+
     /// <summary>
     /// Financial income details released during an earnings call
     /// </summary>

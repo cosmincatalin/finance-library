@@ -18,13 +18,13 @@ public record EarningsDate
     /// it is set to TAS/TNS which means unspecified.
     /// </summary>
     public string DateType { get; init; }
-        
+
     /// <summary>
     /// This is intended to be used in UIs to understand the split between when the market was last open before
     /// ER call, and when it was first open after the ER call.
     /// </summary>
     public string EarningsMarker =>
-        DateType != "BMO" ?
-            Date.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00") :
-            Date.AddDays(-1).ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00");
+        DateType != "BMO"
+            ? Date.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00")
+            : Date.AddDays(-1).ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00");
 }

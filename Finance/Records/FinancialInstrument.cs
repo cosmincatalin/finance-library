@@ -15,7 +15,7 @@ public record FinancialInstrument
         get => _ticker;
         init => _ticker = value.Trim().ToUpper();
     }
-        
+
     /// <summary>
     /// The recognizable company name associated with the financial instrument
     /// </summary>

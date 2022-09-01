@@ -7,9 +7,9 @@
 //
 // public class QuotesTest
 // {
-//         
+//
 //     private const string Ticker = "ZTO";
-//         
+//
 //     [Test]
 //     public async Task FetchQuotesAndCache()
 //     {

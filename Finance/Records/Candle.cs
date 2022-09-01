@@ -7,7 +7,6 @@ namespace CosminSanda.Finance.Records;
 /// </summary>
 public record Candle
 {
-
     /// <summary>
     /// The company to which the quotes relate to
     /// </summary>
@@ -42,9 +41,8 @@ public record Candle
     /// The string representation of the object
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-        return $"{FinancialInstrument.Ticker},{Date:yyyy-MM-dd},{Open:.##},{High:.##},{Low:.##},{Close:.##}";
-    }
-
+    // public override string ToString()
+    // {
+    //     return $"{FinancialInstrument.Ticker},{Date:yyyy-MM-dd},{Open:.##},{High:.##},{Low:.##},{Close:.##}";
+    // }
 }
