@@ -12,7 +12,7 @@ namespace CosminSanda.Finance
         /// </summary>
         /// <param name="date">The data you want to find out if it falls on a holiday or not</param>
         /// <returns>Weather the day is a holiday or not</returns>
-        public static bool IsHoliday(DateTime date)
+        public static bool IsHoliday(DateOnly date)
         {
             // to ease typing
             var nthWeekDay = (int)(Math.Ceiling(date.Day / 7.0d));

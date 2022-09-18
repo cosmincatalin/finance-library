@@ -38,11 +38,16 @@ public record Candle
     public double Close { get; init; }
 
     /// <summary>
+    /// The number of shares that changed hands
+    /// </summary>
+    public int Volume { get; init; }
+
+    /// <summary>
     /// The string representation of the object
     /// </summary>
     /// <returns></returns>
-    // public override string ToString()
-    // {
-    //     return $"{FinancialInstrument.Ticker},{Date:yyyy-MM-dd},{Open:.##},{High:.##},{Low:.##},{Close:.##}";
-    // }
+    public override string ToString()
+    {
+        return $"{FinancialInstrument.Ticker},{Date:yyyy-MM-dd},{Open:.##},{High:.##},{Low:.##},{Close:.##},{Volume}";
+    }
 }
