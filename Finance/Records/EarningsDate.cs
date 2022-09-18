@@ -24,7 +24,7 @@ public record EarningsDate
     /// ER call, and when it was first open after the ER call.
     /// </summary>
     public string EarningsMarker =>
-        DateType != "BMO"
-            ? Date.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00")
-            : Date.AddDays(-1).ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00");
+        DateType == "BMO"
+            ? Date.AddDays(-1).ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00")
+            : Date.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd 12:00:00");
 }

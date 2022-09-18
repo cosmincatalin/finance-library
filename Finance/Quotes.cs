@@ -10,6 +10,9 @@ using CsvHelperParty = CsvHelper;
 
 namespace CosminSanda.Finance;
 
+/// <summary>
+/// Contains methods for retrieving quotes (prices) on selected days for selected companies.
+/// </summary>
 public static class Quotes
 {
     /// <summary>
