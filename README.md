@@ -1,6 +1,8 @@
 # CosminSanda.Finance
 
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/CosminSanda.Finance?style=plastic) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cosmincatalin/finance-library/Test)
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/CosminSanda.Finance?style=plastic)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cosmincatalin/finance-library/Test)
+[![codecov](https://codecov.io/gh/cosmincatalin/finance-library/branch/retaliator/graph/badge.svg?token=76WWB6P86W)](https://codecov.io/gh/cosmincatalin/finance-library)
 
 A small library that can be used to easily scrape information about Earnings Releases and financial quotes from Yahoo Finance.
 
