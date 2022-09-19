@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using CosminSanda.Finance;
 using NUnit.Framework;
@@ -7,7 +8,7 @@ namespace Tests;
 public class QuotesTest
 {
 
-    private const string Ticker = "ZTO";
+    private const string Ticker = "MSFT";
 
     [Test]
     public async Task FetchQuotesAndCache()
@@ -21,7 +22,11 @@ public class QuotesTest
     {
         const int lookAround = 6;
         var earnings = await EarningsCalendar.GetPastEarningsDates(Ticker);
-        var quotes = await Quotes.GetQuotesAround(Ticker, earnings[0], lookAround);
+        var selectedEarning = earnings[0];
+        if (earnings.Count > 2) {
+            selectedEarning = earnings[earnings.Count - 1];
+        }
+        var quotes = await Quotes.GetQuotesAround(Ticker, selectedEarning, lookAround);
         Assert.AreEqual(lookAround * 2, quotes.Count , "there must be exactly double the quotes days as the lookAround.");
     }
 }

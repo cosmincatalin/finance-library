@@ -38,6 +38,8 @@ public static class Quotes
         var url =
             $"https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={start.ToUnixTime()}&period2={end.ToUnixTime()}&interval=1d&events=history";
 
+        Console.Out.WriteLine($"URL used: {url}");
+
         using var httpClient = new HttpClient();
         await using var responseStream = await httpClient.GetStreamAsync(url);
 

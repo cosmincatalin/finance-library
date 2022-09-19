@@ -16,4 +16,6 @@ jobs:
             -   name: Restore dependencies
                 run: dotnet restore
             -   name: Test
-                run: dotnet test
+                run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+            -   name: Code coverage
+                uses: codecov/codecov-action@v3.1.0

@@ -57,9 +57,11 @@ internal static class Scraper
     {
         using var httpClient = new HttpClient();
 
-        await using var responseStream = await httpClient.GetStreamAsync(
-            $"{Url}?{query}&offset=0&size=1"
-        );
+        var url = $"{Url}?{query}&offset=0&size=1";
+
+        Console.Out.WriteLine($"URL used: {url}");
+
+        await using var responseStream = await httpClient.GetStreamAsync(url);
 
         using var responseStreamReader = new StreamReader(responseStream);
         var htmlSource = await responseStreamReader.ReadToEndAsync();
