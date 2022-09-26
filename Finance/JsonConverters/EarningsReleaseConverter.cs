@@ -78,7 +78,8 @@ public class EarningsReleaseConverter : JsonConverter<EarningsRelease>
                     var date = DateTime.ParseExact(
                         reader.GetString()!,
                         "yyyy-MM-dd'T'HH:mm:ss'Z'",
-                        CultureInfo.InvariantCulture
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
                     );
                     earningsDate = DateOnly.FromDateTime(date);
                     break;

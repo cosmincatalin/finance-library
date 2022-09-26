@@ -7,12 +7,15 @@ namespace Tests;
 
 public class EarningsCalendarTest
 {
-
     [Test, Order(1)]
     public async Task FetchEarningsAndCache()
     {
         var ztoEarnings = await EarningsCalendar.GetPastEarningsDates("MSFT");
-        Assert.Greater(ztoEarnings.Count, 110, $"There must be more than 150 earnings calls for the Microsoft Corp.");
+        Assert.Greater(
+            ztoEarnings.Count,
+            110,
+            $"There must be more than 110 earnings calls for the Microsoft Corp."
+        );
     }
 
     [Test, Order(2)]

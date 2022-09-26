@@ -29,22 +29,35 @@ public static class Quotes
     )
     {
         var start = DateTime
-            .ParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+            .ParseExact(
+                startDate,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+            )
             .ToUniversalTime();
         var end = DateTime
-            .ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+            .ParseExact(
+                endDate,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+            )
             .ToUniversalTime()
             .AddDays(1);
         var url =
             $"https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={start.ToUnixTime()}&period2={end.ToUnixTime()}&interval=1d&events=history";
 
-        Console.Out.WriteLine($"URL used: {url}");
+        await Console.Out.WriteLineAsync($"URL used: {url}");
 
         using var httpClient = new HttpClient();
         await using var responseStream = await httpClient.GetStreamAsync(url);
 
         using var responseStreamReader = new StreamReader(responseStream);
-        using var csvReader = new CsvHelperParty.CsvReader(responseStreamReader, CultureInfo.InvariantCulture);
+        using var csvReader = new CsvHelperParty.CsvReader(
+            responseStreamReader,
+            CultureInfo.InvariantCulture
+        );
         var records = new List<Candle>();
         await csvReader.ReadAsync();
         csvReader.ReadHeader();
@@ -52,11 +65,15 @@ public static class Quotes
         {
             var record = new Candle
             {
-                FinancialInstrument = new FinancialInstrument
-                {
-                    Ticker = ticker
-                },
-                Date = DateOnly.FromDateTime(DateTime.ParseExact(csvReader.GetField("Date"), "yyyy-MM-dd", CultureInfo.InvariantCulture)),
+                FinancialInstrument = new FinancialInstrument { Ticker = ticker },
+                Date = DateOnly.FromDateTime(
+                    DateTime.ParseExact(
+                        csvReader.GetField("Date"),
+                        "yyyy-MM-dd",
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+                    )
+                ),
                 Open = csvReader.GetField<double>("Open"),
                 High = csvReader.GetField<double>("High"),
                 Low = csvReader.GetField<double>("Low"),
