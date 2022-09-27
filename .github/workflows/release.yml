@@ -26,3 +26,26 @@ jobs:
                 shell: pwsh
             -   name: Push
                 run: dotnet nuget push CosminSanda.Finance.$BUILD_VERSION.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+
+    documentation:
+        runs-on: windows-latest
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v2
+                with:
+                    dotnet-version: 6.x.x
+            -   name: Setup DocFX
+                uses: crazy-max/ghaction-chocolatey@v1
+                with:
+                    args: install docfx
+            -   name: DocFX Build
+                working-directory: docfx_project
+                run: docfx .\docfx.json
+                continue-on-error: false
+            -   name: Publish
+                uses: peaceiris/actions-gh-pages@v3
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    publish_dir: docfx_project/_site
+                    force_orphan: true
