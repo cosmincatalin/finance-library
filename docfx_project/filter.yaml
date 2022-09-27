@@ -1,2 +1,3 @@
-- exclude:
-      uidRegex: ^CosminSanda\.Finance\.JsonConverters
+apiRules:
+      -     exclude:
+                  uidRegex: ^CosminSanda\.Finance\.JsonConverters
