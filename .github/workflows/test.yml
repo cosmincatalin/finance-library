@@ -21,23 +21,10 @@ jobs:
                 run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
             -   name: Code coverage
                 uses: codecov/codecov-action@v3.1.0
-
-    documentation:
-        runs-on: windows-latest
-        steps:
-            -   uses: actions/checkout@v3
-            -   name: Setup .NET
-                uses: actions/setup-dotnet@v2
+            -   uses: nikeee/docfx-action@v1.0.0
+                name: Build Documentation
                 with:
-                    dotnet-version: 6.x.x
-            -   name: Setup DocFX
-                uses: crazy-max/ghaction-chocolatey@v1
-                with:
-                    args: install docfx
-            -   name: DocFX Build
-                working-directory: docfx_project
-                run: docfx .\docfx.json
-                continue-on-error: false
+                    args: docfx_project/docfx.json
             -   name: Publish
                 if: github.event_name == 'push'
                 uses: peaceiris/actions-gh-pages@v3
