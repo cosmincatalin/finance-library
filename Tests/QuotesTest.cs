@@ -26,9 +26,7 @@ public class QuotesTest
         {
             selectedEarning = earnings[earnings.Count - 1];
         }
-        Console.Out.WriteLine(selectedEarning);
         var quotes = await Quotes.GetQuotesAround(Ticker, selectedEarning, lookAround);
-        quotes.ForEach(Console.Out.WriteLine);
         Assert.AreEqual(
             lookAround * 2,
             quotes.Count,
