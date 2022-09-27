@@ -1,0 +1,35 @@
+#!markdown
+
+#### Install the latest version of the package
+
+#!csharp
+
+#r "nuget: CosminSanda.Finance"
+#r "nuget: ScottPlot"
+#r "nuget: ScottPlot.DataGen"
+
+#!csharp
+
+using System.Linq;
+using CosminSanda.Finance;
+
+#!csharp
+
+var earnings = await EarningsCalendar.GetPastEarningsDates("TWTR");
+
+#!csharp
+
+earnings.TakeLast(4)
+
+#!csharp
+
+using Microsoft.DotNet.Interactive.Formatting;
+
+Formatter.Register(typeof(ScottPlot.Plot), (plt, writer) => 
+    writer.Write(((ScottPlot.Plot)plt).GetImageHTML()), HtmlFormatter.MimeType);
+
+#!csharp
+
+var plt = new ScottPlot.Plot(600, 400);
+
+plt.AddCandlesticks(prices);
