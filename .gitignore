@@ -7,3 +7,4 @@ riderModule.iml
 finance.sln.DotSettings.user
 .vs
 .vscode
+Tests/TestResults/**
