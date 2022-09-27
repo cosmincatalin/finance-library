@@ -1,0 +1,13 @@
+{
+    "name": "CosminSanda.Finance",
+    "extensions": [
+        "formulahendry.dotnet-test-explorer",
+        "formulahendry.dotnet",
+        "fudge.auto-using",
+        "ms-dotnettools.csharp",
+        "k--kato.docomment",
+        "edwinsulaiman.jetbrains-rider-dark-theme",
+        "obrejla.netbeans-light-theme",
+        "editorconfig.editorconfig"
+    ]
+}

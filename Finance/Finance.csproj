@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>CosminSanda.Finance</RootNamespace>
         <NuspecFile>.nuspec</NuspecFile>
+        <LangVersion>10</LangVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TargetFramework>net6.0</TargetFramework>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="28.0.1" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
+      <PackageReference Include="ServiceStack.Text" Version="6.3.0" />
     </ItemGroup>
 
 </Project>

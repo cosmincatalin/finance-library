@@ -1,23 +1,27 @@
 # CosminSanda.Finance
 
-Tools for stock trading analysis.
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/CosminSanda.Finance?style=plastic)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cosmincatalin/finance-library/Test)
+[![codecov](https://codecov.io/gh/cosmincatalin/finance-library/branch/retaliator/graph/badge.svg?token=76WWB6P86W)](https://codecov.io/gh/cosmincatalin/finance-library)
+
+A small library that can be used to easily scrape information about Earnings Releases and financial quotes from Yahoo Finance.
 
 ## Installation
 
  * #### Classic
     If you would like to use this library in your own project, use the standard installation process. of packages from NuGet.
-    
+
     ```bash
     Install-Package CosminSanda.Finance
     ```
 
  * #### Notebook
     If you would like to use this in a .NET enabled Jupyter notebook use this command in a cell:
- 
+
     ```
     #r "nuget,CosminSanda.Finance"
     ```
-   
+
 ## Usage
 
 ### Get a list of dates when the earnings for a symbol are released
@@ -45,14 +49,4 @@ var quotes = await Quotes.GetQuotesAround("ZTO", earningsDate: earnings[6], look
 
 ```c#
 var nextEarnings = await EarningsCalendar.GetNextEarningsDate("ZTO");
-```
-
-### Release commands
-
-
-```bash
-cd Finance
-dotnet pack
-cd bin/Debug
-dotnet nuget push CosminSanda.Finance.0.0.7.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
 ```
