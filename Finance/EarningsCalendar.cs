@@ -17,10 +17,11 @@ public static class EarningsCalendar
     /// <example>
     /// In this example we get a list of companies that report on 2022-09-28
     /// <code language="c#">
-    ///     using CosminSanda.Finance;
+    /// using CosminSanda.Finance;
     ///
-    ///     var companies = await EarningsCalendar.GetCompaniesReporting(new DateTime(year: 2022, month: 9, day: 28));
-    ///     companies.ForEach(Console.WriteLine);
+    /// var companies = await EarningsCalendar
+    ///     .GetCompaniesReporting(new DateTime(year: 2022, month: 9, day: 28));
+    /// companies.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
     /// <param name="day">The day for which you want to know the companies reporting earnings</param>
@@ -39,10 +40,10 @@ public static class EarningsCalendar
     /// <example>
     /// In this example we get past earnings calls dates for the Microsoft Corporation.
     /// <code language="c#">
-    ///     using CosminSanda.Finance;
+    /// using CosminSanda.Finance;
     ///
-    ///     var companies = await EarningsCalendar.GetPastEarningsDates("msft");
-    ///     companies.ForEach(Console.WriteLine);
+    /// var companies = await EarningsCalendar.GetPastEarningsDates("msft");
+    /// companies.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance. The case is not important.</param>
