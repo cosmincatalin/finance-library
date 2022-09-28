@@ -17,10 +17,11 @@ public static class EarningsCalendar
     /// <example>
     /// In this example we get a list of companies that report on 2022-09-28
     /// <code language="c#">
-    ///     using CosminSanda.Finance;
+    /// using CosminSanda.Finance;
     ///
-    ///     var companies = await EarningsCalendar.GetCompaniesReporting(new DateTime(year: 2022, month: 9, day: 28));
-    ///     companies.ForEach(Console.WriteLine);
+    /// var companies = await EarningsCalendar
+    ///     .GetCompaniesReporting(new DateTime(year: 2022, month: 9, day: 28));
+    /// companies.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
     /// <param name="day">The day for which you want to know the companies reporting earnings</param>
@@ -39,10 +40,10 @@ public static class EarningsCalendar
     /// <example>
     /// In this example we get past earnings calls dates for the Microsoft Corporation.
     /// <code language="c#">
-    ///     using CosminSanda.Finance;
+    /// using CosminSanda.Finance;
     ///
-    ///     var companies = await EarningsCalendar.GetPastEarningsDates("msft");
-    ///     companies.ForEach(Console.WriteLine);
+    /// var earnings = await EarningsCalendar.GetPastEarningsDates("msft");
+    /// earnings.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance. The case is not important.</param>
@@ -63,8 +64,16 @@ public static class EarningsCalendar
     /// <summary>
     /// A method to get the next estimated(or set) earnings release call.
     /// </summary>
-    /// <param name="ticker"></param>
-    /// <returns></returns>
+    /// <example>
+    /// <code language="c#">
+    /// using CosminSanda.Finance;
+    ///
+    /// var earning = await EarningsCalendar.GetNextEarningsDate("msft");
+    /// Console.WriteLine(earning);
+    /// </code>
+    /// </example>
+    /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance. The case is not important.</param>
+    /// <returns>An earnings date in the future</returns>
     public static async Task<EarningsDate> GetNextEarningsDate(string ticker)
     {
         var financialInstrument = new FinancialInstrument { Ticker = ticker };
@@ -76,7 +85,6 @@ public static class EarningsCalendar
             .Select(o => o.EarningsDate)
             .OrderBy(o => o.Date)
             .Take(1)
-            .ToList()
             .First();
     }
 }
