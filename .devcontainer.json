@@ -9,6 +9,7 @@
         "edwinsulaiman.jetbrains-rider-dark-theme",
         "obrejla.netbeans-light-theme",
         "editorconfig.editorconfig",
-        "streetsidesoftware.code-spell-checker"
+        "streetsidesoftware.code-spell-checker",
+        "ms-dotnettools.dotnet-interactive-vscode"
     ]
 }
