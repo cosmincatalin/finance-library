@@ -42,8 +42,8 @@ public static class EarningsCalendar
     /// <code language="c#">
     /// using CosminSanda.Finance;
     ///
-    /// var companies = await EarningsCalendar.GetPastEarningsDates("msft");
-    /// companies.ForEach(Console.WriteLine);
+    /// var earnings = await EarningsCalendar.GetPastEarningsDates("msft");
+    /// earnings.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance. The case is not important.</param>
@@ -64,8 +64,16 @@ public static class EarningsCalendar
     /// <summary>
     /// A method to get the next estimated(or set) earnings release call.
     /// </summary>
-    /// <param name="ticker"></param>
-    /// <returns></returns>
+    /// <example>
+    /// <code language="c#">
+    /// using CosminSanda.Finance;
+    ///
+    /// var earning = await EarningsCalendar.GetNextEarningsDate("msft");
+    /// Console.WriteLine(earning);
+    /// </code>
+    /// </example>
+    /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance. The case is not important.</param>
+    /// <returns>An earnings date in the future</returns>
     public static async Task<EarningsDate> GetNextEarningsDate(string ticker)
     {
         var financialInstrument = new FinancialInstrument { Ticker = ticker };
@@ -77,7 +85,6 @@ public static class EarningsCalendar
             .Select(o => o.EarningsDate)
             .OrderBy(o => o.Date)
             .Take(1)
-            .ToList()
             .First();
     }
 }
