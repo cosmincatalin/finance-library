@@ -11,12 +11,12 @@ using CsvHelperParty = CsvHelper;
 namespace CosminSanda.Finance;
 
 /// <summary>
-/// Contains methods for retrieving quotes (prices) on selected days for selected companies.
+/// Contains methods for retrieving daily quotes (prices) for selected companies.
 /// </summary>
 public static class Quotes
 {
     /// <summary>
-    /// Retrieve the day Candles for an instrument during a time interval.
+    /// Retrieve the Japanese candles for each day of a time interval for a specified company.
     /// </summary>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
     /// <param name="startDate">The day from when you start retrieving the quotes, inclusive.</param>
