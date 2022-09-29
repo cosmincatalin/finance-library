@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>CosminSanda.Finance</id>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <title>Yahoo Earnings Calendar</title>
         <authors>Cosmin Catalin Sanda</authors>
         <owners>cosmincatalin</owners>
@@ -15,7 +15,7 @@
         <tags>finance scraper</tags>
         <dependencies>
             <group>
-                <dependency id="CsvHelper" version="28.0.1" />
+                <dependency id="CsvHelper" version="28.0.0" />
                 <dependency id="Newtonsoft.Json" version="13.0.1" />
                 <dependency id="ServiceStack.Text" version="6.3.0" />
             </group>
