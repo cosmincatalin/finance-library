@@ -103,10 +103,16 @@ public static class Quotes
     {
         lookAround = Math.Max(lookAround, 1);
         var start = earningsDate.Date;
-        var end = start.AddDays(1);
-        if (earningsDate.DateType != "BMO")
-            lookAround -= 1;
-        for (var i = 0; i < lookAround; i++)
+        var end = earningsDate.Date.AddDays(1);
+        while (Util.IsHoliday(end))
+            end = end.AddDays(1);
+        if (earningsDate.DateType == "BMO") {
+            start = earningsDate.Date.AddDays(-1);
+            while (Util.IsHoliday(start))
+                start = start.AddDays(-1);
+            end = earningsDate.Date;
+        }
+        for (var i = 1; i < lookAround; i++)
         {
             start = start.AddDays(-1);
             while (Util.IsHoliday(start))
