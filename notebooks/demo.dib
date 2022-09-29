@@ -6,12 +6,14 @@
 
 #r "nuget: CosminSanda.Finance"
 #r "nuget: ScottPlot"
-#r "nuget: ScottPlot.DataGen"
+#r "nuget: CsvHelper"
+#r "nuget: ServiceStack.Text"
 
 #!csharp
 
 using System.Linq;
 using CosminSanda.Finance;
+using CosminSanda.Finance.Records;
 
 #!csharp
 
@@ -19,7 +21,11 @@ var earnings = await EarningsCalendar.GetPastEarningsDates("TWTR");
 
 #!csharp
 
-earnings.TakeLast(4)
+var lastDate = earnings.Last();
+
+#!csharp
+
+var quotes = await Quotes.GetQuotesAround("TWTR", lastDate, 3);
 
 #!csharp
 

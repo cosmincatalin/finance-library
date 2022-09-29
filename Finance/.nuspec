@@ -15,8 +15,9 @@
         <tags>finance scraper</tags>
         <dependencies>
             <group>
+                <dependency id="CsvHelper" version="28.0.1" />
                 <dependency id="Newtonsoft.Json" version="13.0.1" />
-                <dependency id="ServiceStack.Text" version="6.2.0" />
+                <dependency id="ServiceStack.Text" version="6.3.0" />
             </group>
             <group targetFramework="net6.0" />
         </dependencies>
