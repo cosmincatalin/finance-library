@@ -10,6 +10,7 @@
                 }
             ],
             "dest": "api",
+            "filter": "filter.yaml",
             "disableGitFeatures": false,
             "disableDefaultFilter": false
         }
@@ -53,7 +54,8 @@
         "globalMetadataFiles": [],
         "fileMetadataFiles": [],
         "template": [
-            "default"
+            "default",
+            "templates/custom"
         ],
         "postProcessors": [],
         "markdownEngineName": "markdig",

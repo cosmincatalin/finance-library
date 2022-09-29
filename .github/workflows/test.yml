@@ -18,6 +18,32 @@ jobs:
             -   name: Build
                 run: dotnet build --no-restore
             -   name: Test
-                run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
-            -   name: Code coverage
-                uses: codecov/codecov-action@v3.1.0
+                run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+            -   name: Publish coverage report to coveralls.io
+                uses: coverallsapp/github-action@master
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    path-to-lcov: ./Tests/TestResults/coverage.info
+
+    documentation:
+        runs-on: windows-latest
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v2
+                with:
+                    dotnet-version: 6.x.x
+            -   name: Setup DocFX
+                uses: crazy-max/ghaction-chocolatey@v1
+                with:
+                    args: install docfx
+            -   name: DocFX Build
+                working-directory: docfx_project
+                run: docfx .\docfx.json
+                continue-on-error: false
+            -   name: Publish
+                uses: peaceiris/actions-gh-pages@v3
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    publish_dir: docfx_project/_site
+                    force_orphan: true

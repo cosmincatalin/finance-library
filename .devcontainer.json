@@ -8,6 +8,8 @@
         "k--kato.docomment",
         "edwinsulaiman.jetbrains-rider-dark-theme",
         "obrejla.netbeans-light-theme",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "streetsidesoftware.code-spell-checker",
+        "ms-dotnettools.dotnet-interactive-vscode"
     ]
 }

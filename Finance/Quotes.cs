@@ -11,12 +11,12 @@ using CsvHelperParty = CsvHelper;
 namespace CosminSanda.Finance;
 
 /// <summary>
-/// Contains methods for retrieving quotes (prices) on selected days for selected companies.
+/// Contains methods for retrieving daily quotes (prices) for selected companies.
 /// </summary>
 public static class Quotes
 {
     /// <summary>
-    /// Retrieve the day Candles for an instrument during a time interval.
+    /// Retrieve the Japanese candles for each day of a time interval for a specified company.
     /// </summary>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
     /// <param name="startDate">The day from when you start retrieving the quotes, inclusive.</param>
@@ -103,10 +103,16 @@ public static class Quotes
     {
         lookAround = Math.Max(lookAround, 1);
         var start = earningsDate.Date;
-        var end = start.AddDays(1);
-        if (earningsDate.DateType != "BMO")
-            lookAround -= 1;
-        for (var i = 0; i < lookAround; i++)
+        var end = earningsDate.Date.AddDays(1);
+        while (Util.IsHoliday(end))
+            end = end.AddDays(1);
+        if (earningsDate.DateType == "BMO") {
+            start = earningsDate.Date.AddDays(-1);
+            while (Util.IsHoliday(start))
+                start = start.AddDays(-1);
+            end = earningsDate.Date;
+        }
+        for (var i = 1; i < lookAround; i++)
         {
             start = start.AddDays(-1);
             while (Util.IsHoliday(start))

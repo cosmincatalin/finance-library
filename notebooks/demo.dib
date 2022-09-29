@@ -1,0 +1,46 @@
+#!markdown
+
+#### Install the latest version of the package
+
+#!csharp
+
+#r "nuget: CosminSanda.Finance"
+#r "nuget: XPlot.Plotly.Interactive"
+#r "nuget: CsvHelper"
+#r "nuget: ServiceStack.Text"
+
+#!csharp
+
+using XPlot.Plotly;
+using CosminSanda.Finance;
+using CosminSanda.Finance.Records;
+
+#!csharp
+
+var earnings = await EarningsCalendar.GetPastEarningsDates("TWTR");
+
+#!csharp
+
+var lastDate = earnings.Last();
+
+#!csharp
+
+var quotes = await Quotes.GetQuotesAround("TWTR", lastDate, 3);
+
+#!csharp
+
+var chart4 = Chart.Candlestick(quotes.Select(o => new Tuple<string, double, double, double, double>(
+    o.Date.ToDateTime(TimeOnly.Parse("10:00 PM")).ToString("yyyy-MM-dd"),
+    o.Open,
+    o.High,
+    o.Low,
+    o.Close
+)));
+
+chart4.WithLayout(new Layout.Layout{
+    title="OHLC"
+});
+
+#!csharp
+
+chart4
