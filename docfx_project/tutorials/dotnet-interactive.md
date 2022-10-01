@@ -14,7 +14,7 @@ Although `CsvHelper` and `ServiceStack.Text` should be installed as transient de
 #r "nuget: ServiceStack.Text"
 ```
 
-Get an asceding ordered list of all Tesla earnings dates.  
+Get an ascending ordered list of all Tesla earnings dates.  
 
 ```csharp
 var earnings = await EarningsCalendar.GetPastEarningsDates("TSLA");
