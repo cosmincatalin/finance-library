@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CosminSanda.Finance.Records;
@@ -20,15 +21,25 @@ public static class EarningsCalendar
     /// using CosminSanda.Finance;
     ///
     /// var companies = await EarningsCalendar
-    ///     .GetCompaniesReporting(new DateTime(year: 2022, month: 9, day: 28));
+    ///     .GetCompaniesReporting("2022-09-28");
     /// companies.ForEach(Console.WriteLine);
     /// </code>
     /// </example>
-    /// <param name="day">The day for which you want to know the companies reporting earnings</param>
+    /// <param name="day">The date string (yyyy-MM-dd format) for which you want
+    /// to know the companies reporting earnings</param>
     /// <returns>A list of companies</returns>
-    public static async Task<List<FinancialInstrument>> GetCompaniesReporting(DateTime day)
+    public static async Task<List<FinancialInstrument>> GetCompaniesReporting(string day)
     {
-        var date = DateOnly.FromDateTime(day);
+        var date = DateOnly.FromDateTime(
+            DateTime
+                .ParseExact(
+                    day,
+                    "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+                )
+                .ToUniversalTime()
+        );
 
         var earnings = await Scraper.RetrieveEarningsReleases(date);
         return earnings.Select(o => o.FinancialInstrument).ToList();
