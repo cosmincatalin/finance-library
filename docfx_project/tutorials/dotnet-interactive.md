@@ -35,7 +35,7 @@ var quotes = await Quotes.GetQuotesAround("TSLA", lastDate, 5);
 
 Use a charting library to vizualise the data and get a feel of how the earnings call expectations and actual results influence the price action.
 
-In the case of the Tesla earnings release on 20th of July 2022, it's obvious that the call happened after market close, so the 20th is part of the "before earnings" half of the cancles.
+In the case of the Tesla earnings release on 20th of July 2022, it's obvious that the call happened after market close, so the 20th is part of the "before earnings" half of the candles.
 
 ```csharp
 var chart = Chart
