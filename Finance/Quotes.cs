@@ -19,8 +19,8 @@ public static class Quotes
     /// Retrieve the Japanese candles for each day of a time interval for a specified company.
     /// </summary>
     /// <param name="ticker">The financial instrument's ticker as used on Yahoo Finance.</param>
-    /// <param name="startDate">The day from when you start retrieving the quotes, inclusive.</param>
-    /// <param name="endDate">The day until when you retrieve the quotes, inclusive</param>
+    /// <param name="startDate">The day from when you start retrieving the quotes, inclusive (yyyy-MM-dd format).</param>
+    /// <param name="endDate">The day until when you retrieve the quotes, inclusive (yyyy-MM-dd format).</param>
     /// <returns>A list of quotes in ascending order</returns>
     public static async Task<List<Candle>> GetQuotes(
         string ticker,
@@ -106,7 +106,8 @@ public static class Quotes
         var end = earningsDate.Date.AddDays(1);
         while (Util.IsHoliday(end))
             end = end.AddDays(1);
-        if (earningsDate.DateType == "BMO") {
+        if (earningsDate.DateType == "BMO")
+        {
             start = earningsDate.Date.AddDays(-1);
             while (Util.IsHoliday(start))
                 start = start.AddDays(-1);
