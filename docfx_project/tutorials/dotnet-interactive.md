@@ -54,4 +54,4 @@ chart
 
 You should see something similar to this:
 
-![tesla.png](tesla.png)
+![Tesla earnings call](images/tesla.png)

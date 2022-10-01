@@ -2,7 +2,7 @@
 
 ## dotnet-interactive
 
-In a `dotnet-interactive` the library can be installed with
+In a `dotnet-interactive` notebook, the library can be installed with
 
 ```csharp
 #r "nuget: CosminSanda.Finance"
