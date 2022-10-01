@@ -1,1 +1,1 @@
-# Add your introductions here!
+Here you can find end-to-end sample of using the library.
