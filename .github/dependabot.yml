@@ -1,10 +1,16 @@
 version: 2
 updates:
-    -   package-ecosystem: "github-actions"
-        directory: "/"
-        schedule:
-            interval: "daily"
-    -   package-ecosystem: "nuget"
-        directory: "/"
-        schedule:
-            interval: "daily
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: ⬆
+  # Python
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: ⬆
