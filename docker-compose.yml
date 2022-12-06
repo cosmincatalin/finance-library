@@ -1,7 +1,8 @@
-version: "3.8"
+version: "3.9"
 services:
     dev:
         build:
+            context: .
             dockerfile: docker/dev.Dockerfile
         volumes:
             -   .:/workspace
