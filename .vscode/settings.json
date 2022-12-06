@@ -1,0 +1,45 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.idea": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "files.associations": {
+    },
+    "cSpell.words": [
+        "buildsystems",
+        "Cava",
+        "cavathor",
+        "Codespace",
+        "cppcheck",
+        "cpplint",
+        "cpptools",
+        "cschleiden",
+        "devcontainer",
+        "devescalus",
+        "elagil",
+        "gersemi",
+        "hadolint",
+        "hiredis",
+        "hykin",
+        "instdir",
+        "IRAW",
+        "jeppeandersen",
+        "linelength",
+        "lukka",
+        "mutantdino",
+        "proto3",
+        "protoc",
+        "REDISDESTINATION",
+        "resourcemonitor",
+        "sonarlint",
+        "sonarsource",
+        "subdir",
+        "surajbarkale",
+        "uncrustify",
+        "vcpkg",
+        "VCPKG"
+    ],
+    "workbench.tree.indent": 24
+}
