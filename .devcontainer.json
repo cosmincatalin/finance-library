@@ -1,5 +1,8 @@
 {
     "name": "CosminSanda.Finance",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev",
+    "workspaceFolder": "/workspace",
     "extensions": [
         "formulahendry.dotnet-test-explorer",
         "formulahendry.dotnet",
@@ -10,6 +13,10 @@
         "obrejla.netbeans-light-theme",
         "editorconfig.editorconfig",
         "streetsidesoftware.code-spell-checker",
-        "ms-dotnettools.dotnet-interactive-vscode"
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "sonarsource.sonarlint-vscode",
+        "cschleiden.vscode-github-actions",
+        "mutantdino.resourcemonitor",
+        "devescalus.git-commit-no-verify-action-button"
     ]
 }
