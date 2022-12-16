@@ -28,8 +28,7 @@ public class EarningsReleaseConverter : JsonConverter<EarningsRelease>
 
         string ticker = null;
         string company = null;
-        // ReSharper disable once TooWideLocalVariableScope
-        DateOnly earningsDate;
+        var earningsDate = new DateOnly();
         string earningsDateType = null;
         double? epsEstimate = null;
         double? epsActual = null;
