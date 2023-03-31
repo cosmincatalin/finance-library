@@ -1,4 +1,4 @@
-﻿name: Test
+name: Test
 
 on:
     push:
@@ -10,7 +10,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v3
             -   name: Setup .NET
-                uses: actions/setup-dotnet@v2
+                uses: actions/setup-dotnet@v3
                 with:
                     dotnet-version: 6.x.x
             -   name: Restore dependencies
@@ -30,7 +30,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v3
             -   name: Setup .NET
-                uses: actions/setup-dotnet@v2
+                uses: actions/setup-dotnet@v3
                 with:
                     dotnet-version: 6.x.x
             -   name: Setup DocFX
