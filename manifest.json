@@ -1,0 +1,266 @@
+{
+  "homepages": [],
+  "source_base_path": "D:/a/finance-library/finance-library/docfx_project",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.EarningsCalendar.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.EarningsCalendar.html",
+          "hash": "dJwK+SW/DjrucmBsr/tHTYs4lNpVR7fFLGtXAs7oV64="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Quotes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Quotes.html",
+          "hash": "TRVPDAQmG0Ul3G1rTu+jkU1FiNQwIolyJBxXM9NfVE0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.Candle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.Candle.html",
+          "hash": "ojcL2CHygyT2YrIaTSepRhNj2G3eEevo71J2WnJBFkY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.EarningsDate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.EarningsDate.html",
+          "hash": "dZ6OWVneEzfFKsDfvHKbxN7zsaICkUf51IYVI0fVX/Y="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.EarningsRelease.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.EarningsRelease.html",
+          "hash": "AU30mLJwYjweayYX6fd4hB5XkJnuIW5h6UAnJA/kea4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.FinancialInstrument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.FinancialInstrument.html",
+          "hash": "bY8tL5RWu5tsrtPHMULBRD2VYShuzhFuCtQlSs6CXf0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.IncomeStatement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.IncomeStatement.html",
+          "hash": "LMxZLNlHcRpbf+MbkGF0NLW7AYUb7nmh27S6cNI6Ng4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.Records.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.Records.html",
+          "hash": "AIJow+msbM8orjpruOQ6on2hExOSAmHrsG9RxDJ11wQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CosminSanda.Finance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CosminSanda.Finance.html",
+          "hash": "aS9kNs1ggKnRzlj3Bb66+8VsatkYEWFRq52CS1JzAok="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "pfo1oDWHzYkjBnlx0Tsu/aWySXockEXeD/A02dolNC4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "P9c0Nb7qq7qXgkyraN5BXgI6jIFP8AZy1iYoSuDgjrU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/tesla.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/tesla.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "se0l1SzlZaZgxgLT8qhcw8b4vduoT+HiZ17znqNb6b0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "RVW5d0piu43yrw76Tug37DwCzmtUDnurO1WZ5f7jPmo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "tutorials/dotnet-interactive.md",
+      "output": {
+        ".html": {
+          "relative_path": "tutorials/dotnet-interactive.html",
+          "hash": "06t8pbN+g7qZ87TqwQVoW+vbQyUXr/aBXDF4Sr/26aw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "tutorials/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "tutorials/intro.html",
+          "hash": "i4xQKrE9HLnIKxWXWMMSO/dUYtz+U51YMXbDsxb0dlg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "tutorials/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "tutorials/toc.html",
+          "hash": "GqENZgbJSaHlQOBWZflm3VFEJvdmXP2hZ1Ooujiar04="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 4,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 9,
+          "skipped_file_count": 0
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
